@@ -6,7 +6,7 @@ license-file = "LICENSE"
 authors = ["Nikolay Govorov <nikolay_govorov@bk.ru>"]
 repository = "https://github.com/nikolay-govorov/nanoid.git"
 
-include = ["src/**/*", "Cargo.toml"]
+include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md"]
 
 [dependencies]
 rand = "0.4.1"
