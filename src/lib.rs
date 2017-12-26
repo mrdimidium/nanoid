@@ -1,11 +1,9 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
+#[no_mangle]
+pub extern fn nanoid() -> i32 {
+    5
 }
 
-pub extern fn nanoid() {
-    println!("Hello the nanoid implementation! :)");
+#[test]
+fn it_works() {
+    assert_eq!(nanoid(), 5);
 }

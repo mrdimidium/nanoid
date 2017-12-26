@@ -2,8 +2,12 @@
 name = "nanoid"
 description = "A tiny, secure, URL-friendly, unique string ID generator for Rust."
 version = "0.1.0"
+license = "MIT"
+license-file = "LICENSE"
 authors = ["Nikolay Govorov <nikolay_govorov@bk.ru>"]
+repository = "https://github.com/nikolay-govorov/nanoid.git"
 
 include = ["src/**/*", "Cargo.toml"]
 
 [dependencies]
+rand = "0.4.1"
