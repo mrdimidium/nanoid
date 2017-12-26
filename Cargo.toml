@@ -1,0 +1,9 @@
+[package]
+name = "nanoid"
+description = "A tiny, secure, URL-friendly, unique string ID generator for Rust."
+version = "0.1.0"
+authors = ["Nikolay Govorov <nikolay_govorov@bk.ru>"]
+
+include = ["src/**/*", "Cargo.toml"]
+
+[dependencies]
