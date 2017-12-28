@@ -20,13 +20,19 @@ fn random(size: usize) -> Vec<u32> {
     result
 }
 
-#[test]
-fn test_random() {
-    let bytes : Vec<u32> = random(5);
+#[cfg(test)]
+mod random {
+    use super::*;
 
-    assert_eq!(bytes.len(), 5);
+    #[test]
+    fn generates_random_vectors() {
+        let bytes : Vec<u32> = random(5);
+
+        assert_eq!(bytes.len(), 5);
+    }
 }
 
+/// # Write simple funciton
 pub extern fn simple(size: usize) -> String {
     let mut id = String::new();
 
@@ -39,4 +45,54 @@ pub extern fn simple(size: usize) -> String {
     }
 
     id
+}
+
+#[cfg(test)]
+mod simple {
+    use super::*;
+    use std::collections::HashMap;
+
+    /// Length matches the required
+    #[test]
+    fn correct_length () {
+        let lengths: Vec<usize> = vec![21, 5, 17, 134, 1];
+
+        for l in lengths {
+            let id = simple(l);
+
+            assert_eq!(id.len(), l);
+        }
+    }
+
+    /// Generates URL-friendly IDs
+    #[test]
+    fn url_friendly () {
+        for _ in 0..10 {
+            let id = simple(21);
+
+            assert_eq!(id.len(), 21);
+
+            for ch in id.chars() {
+                assert!(URL_SYMBOLS.contains(&ch));
+            }
+        }
+    }
+
+    /// Has no collisions
+    #[test]
+    fn no_collisions () {
+        let count = 100 * 1000;
+
+        let mut ids = HashMap::new();
+
+        for _ in 0..count {
+            let id = simple(21);
+
+            if ids.contains_key(&id) {
+                panic!();
+            }
+
+            ids.insert(id, true);
+        }
+    }
 }
