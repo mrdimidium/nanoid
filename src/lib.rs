@@ -81,7 +81,7 @@ mod simple {
     /// Has no collisions
     #[test]
     fn no_collisions () {
-        let count = 100 * 1000;
+        let count = 10^5;
 
         let mut ids = HashMap::new();
 
