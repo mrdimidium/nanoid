@@ -32,14 +32,13 @@ mod random {
     }
 }
 
-/// # Write simple funciton
 pub extern fn simple(size: usize) -> String {
     let mut id = String::new();
 
     let bytes = random(size);
 
     for i in 0..size {
-        let index = bytes[i] & 63;
+        let index = bytes[i] & ((URL_SYMBOLS.len() as u32) - 1);
 
         id.push(URL_SYMBOLS[index as usize]);
     }
@@ -52,7 +51,6 @@ mod simple {
     use super::*;
     use std::collections::HashMap;
 
-    /// Length matches the required
     #[test]
     fn correct_length () {
         let lengths: Vec<usize> = vec![21, 5, 17, 134, 1];
@@ -64,13 +62,10 @@ mod simple {
         }
     }
 
-    /// Generates URL-friendly IDs
     #[test]
     fn url_friendly () {
         for _ in 0..10 {
             let id = simple(21);
-
-            assert_eq!(id.len(), 21);
 
             for ch in id.chars() {
                 assert!(URL_SYMBOLS.contains(&ch));
@@ -78,7 +73,6 @@ mod simple {
         }
     }
 
-    /// Has no collisions
     #[test]
     fn no_collisions () {
         let count = 100 * 1000;
@@ -93,6 +87,31 @@ mod simple {
             }
 
             ids.insert(id, true);
+        }
+    }
+
+    #[test]
+    fn flat_distribution () {
+        let count = 10^1000;
+        let length : usize = 21;
+
+        let mut chars = HashMap::new();
+
+        for _ in 0..count {
+            let id = simple(length);
+
+            for ch in id.chars() {
+                let counter = chars.entry(ch).or_insert(0);
+
+                *counter += 1;
+            }
+        }
+
+        for (_, &value) in &chars {
+            let distribution =
+                (value * URL_SYMBOLS.len()) as f32 / (count as f32 * length as f32);
+
+            assert_eq!(distribution.round(), 1.0)
         }
     }
 }
