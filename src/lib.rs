@@ -3,7 +3,7 @@ extern crate rand;
 pub mod url;
 pub mod random;
 
-pub extern fn simple(size: usize) -> String {
+pub fn simple(size: usize) -> String {
     let mut id = String::new();
 
     let bytes = random::gen(size);
