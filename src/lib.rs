@@ -1,37 +1,12 @@
 extern crate rand;
 
-use rand::Rng;
-
-mod url;
-
-fn random(size: usize) -> Vec<u32> {
-    let mut rng = rand::thread_rng();
-
-    let mut result: Vec<u32> = vec![0; size];
-
-    for i in 0..size {
-        result[i] = rng.gen::<u32>();
-    }
-
-    result
-}
-
-#[cfg(test)]
-mod random {
-    use super::*;
-
-    #[test]
-    fn generates_random_vectors() {
-        let bytes : Vec<u32> = random(5);
-
-        assert_eq!(bytes.len(), 5);
-    }
-}
+pub mod url;
+pub mod random;
 
 pub extern fn simple(size: usize) -> String {
     let mut id = String::new();
 
-    let bytes = random(size);
+    let bytes = random::gen(size);
 
     for i in 0..size {
         let index = bytes[i] & ((url::SYMBOLS.len() as u32) - 1);
