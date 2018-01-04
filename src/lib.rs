@@ -174,11 +174,10 @@ mod test_fast {
 pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u32>) -> String {
     let x = alphabet.len();
 
-    if (x != 0) && ((x & (x - 1)) == 0) { // if x = 2^n
-        fast(random, alphabet, size)
-    } else {
-        format(random, alphabet, size)
-    }
+    // if (x == 2^n)
+    let generator = if (x != 0) && ((x & (x - 1)) == 0) { fast } else { format };
+
+    generator(random, alphabet, size)
 }
 
 pub fn custom(size: usize, alphabet: &[char]) -> String {
