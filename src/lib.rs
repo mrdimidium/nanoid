@@ -2,6 +2,11 @@ extern crate rand;
 
 pub mod url;
 pub mod random;
+pub mod format;
+
+pub fn generate(alphabet: &[char], size: usize) -> String {
+    format::format(random::gen, alphabet, size)
+}
 
 pub fn simple(size: usize) -> String {
     let mut id = String::new();
@@ -18,7 +23,7 @@ pub fn simple(size: usize) -> String {
 }
 
 #[cfg(test)]
-mod simple {
+mod test_simple {
     use super::*;
     use std::collections::HashMap;
 
