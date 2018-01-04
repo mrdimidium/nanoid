@@ -87,7 +87,7 @@ mod test_format {
     }
 }
 
-pub fn fast(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
+fn fast(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
     let mut id = String::new();
 
     let bytes = random(size);
