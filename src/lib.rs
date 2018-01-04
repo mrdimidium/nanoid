@@ -1,22 +1,105 @@
 extern crate rand;
 
-pub mod url;
-pub mod random;
-pub mod format;
+use rand::Rng;
+
+const URL_SYMBOLS: [char; 64] = [
+    '_', '~',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+];
+
+fn random(size: usize) -> Vec<u32> {
+    let mut rng = rand::thread_rng();
+
+    let mut result: Vec<u32> = vec![0; size];
+
+    for i in 0..size {
+        result[i] = rng.gen::<u32>();
+    }
+
+    result
+}
+
+#[cfg(test)]
+mod test_random {
+    use super::*;
+
+    #[test]
+    fn generates_random_vectors() {
+        let bytes : Vec<u32> = random(5);
+
+        assert_eq!(bytes.len(), 5);
+    }
+}
+
+fn format(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
+    let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
+    let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
+
+    let mut id = String::new();
+
+    'main: loop {
+        let bytes = random(step);
+
+        for i in 0..step {
+            let byte: usize = bytes[i] as usize & mask;
+
+            if alphabet.len() > byte {
+                id.push(alphabet[byte]);
+
+                if id.len() == size {
+                    break 'main;
+                }
+            }
+        }
+    }
+
+    id
+}
+
+#[cfg(test)]
+mod test_format {
+    use super::*;
+
+    #[test]
+    fn generates_random_string() {
+        fn random (size: usize) -> Vec<u32> {
+            let sequence: Vec<u32> = vec![2, 255, 0, 1];
+
+            let mut bytes: Vec<u32> = vec![];
+
+            let mut i =  0;
+            while i < size {
+                let (elements, _) = sequence.split_at(if size - i > sequence.len() { sequence.len() } else { size - i });
+
+                for &el in elements {
+                    bytes.push(el);
+                }
+
+                i += sequence.len();
+            }
+
+            bytes
+        }
+
+        assert_eq!(format(random, &['a', 'b', 'c'], 4), "cabc");
+    }
+}
 
 pub fn generate(alphabet: &[char], size: usize) -> String {
-    format::format(random::gen, alphabet, size)
+    format(random, alphabet, size)
 }
 
 pub fn simple(size: usize) -> String {
     let mut id = String::new();
 
-    let bytes = random::gen(size);
+    let bytes = random(size);
 
     for i in 0..size {
-        let index = bytes[i] & ((url::SYMBOLS.len() as u32) - 1);
+        let index = bytes[i] & ((URL_SYMBOLS.len() as u32) - 1);
 
-        id.push(url::SYMBOLS[index as usize]);
+        id.push(URL_SYMBOLS[index as usize]);
     }
 
     id
@@ -44,7 +127,7 @@ mod test_simple {
             let id = simple(21);
 
             for ch in id.chars() {
-                assert!(url::SYMBOLS.contains(&ch));
+                assert!(URL_SYMBOLS.contains(&ch));
             }
         }
     }
@@ -85,7 +168,7 @@ mod test_simple {
 
         for (_, &value) in &chars {
             let distribution =
-                (value * url::SYMBOLS.len()) as f32 / (count as f32 * length as f32);
+                (value * URL_SYMBOLS.len()) as f32 / (count as f32 * length as f32);
 
             assert_eq!(distribution.round(), 1.0)
         }
