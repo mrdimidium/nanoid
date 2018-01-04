@@ -2,11 +2,7 @@ extern crate rand;
 
 use rand::Rng;
 
-const URL_SYMBOLS: [char; 64] = [
-    '_', '~', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-];
+mod url;
 
 fn random(size: usize) -> Vec<u32> {
     let mut rng = rand::thread_rng();
@@ -38,9 +34,9 @@ pub extern fn simple(size: usize) -> String {
     let bytes = random(size);
 
     for i in 0..size {
-        let index = bytes[i] & ((URL_SYMBOLS.len() as u32) - 1);
+        let index = bytes[i] & ((url::SYMBOLS.len() as u32) - 1);
 
-        id.push(URL_SYMBOLS[index as usize]);
+        id.push(url::SYMBOLS[index as usize]);
     }
 
     id
@@ -68,7 +64,7 @@ mod simple {
             let id = simple(21);
 
             for ch in id.chars() {
-                assert!(URL_SYMBOLS.contains(&ch));
+                assert!(url::SYMBOLS.contains(&ch));
             }
         }
     }
@@ -109,7 +105,7 @@ mod simple {
 
         for (_, &value) in &chars {
             let distribution =
-                (value * URL_SYMBOLS.len()) as f32 / (count as f32 * length as f32);
+                (value * url::SYMBOLS.len()) as f32 / (count as f32 * length as f32);
 
             assert_eq!(distribution.round(), 1.0)
         }
