@@ -2,7 +2,7 @@ extern crate rand;
 
 use rand::Rng;
 
-const URL_SYMBOLS: [char; 64] = [
+const SAFE_ALPHABET: [char; 64] = [
     '_', '~',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -87,26 +87,22 @@ mod test_format {
     }
 }
 
-pub fn generate(alphabet: &[char], size: usize) -> String {
-    format(random, alphabet, size)
-}
-
-pub fn simple(size: usize) -> String {
+pub fn fast(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
     let mut id = String::new();
 
     let bytes = random(size);
 
     for i in 0..size {
-        let index = bytes[i] & ((URL_SYMBOLS.len() as u32) - 1);
+        let index = bytes[i] & ((alphabet.len() as u32) - 1);
 
-        id.push(URL_SYMBOLS[index as usize]);
+        id.push(alphabet[index as usize]);
     }
 
     id
 }
 
 #[cfg(test)]
-mod test_simple {
+mod test_fast {
     use super::*;
     use std::collections::HashMap;
 
@@ -115,7 +111,7 @@ mod test_simple {
         let lengths: Vec<usize> = vec![21, 5, 17, 134, 1];
 
         for l in lengths {
-            let id = simple(l);
+            let id = fast(random, &SAFE_ALPHABET, l);
 
             assert_eq!(id.len(), l);
         }
@@ -124,10 +120,10 @@ mod test_simple {
     #[test]
     fn url_friendly () {
         for _ in 0..10 {
-            let id = simple(21);
+            let id = fast(random, &SAFE_ALPHABET, 21);
 
             for ch in id.chars() {
-                assert!(URL_SYMBOLS.contains(&ch));
+                assert!(SAFE_ALPHABET.contains(&ch));
             }
         }
     }
@@ -139,7 +135,7 @@ mod test_simple {
         let mut ids = HashMap::new();
 
         for _ in 0..count {
-            let id = simple(21);
+            let id = fast(random, &SAFE_ALPHABET, 21);
 
             if ids.contains_key(&id) {
                 panic!();
@@ -157,7 +153,7 @@ mod test_simple {
         let mut chars = HashMap::new();
 
         for _ in 0..count {
-            let id = simple(length);
+            let id = fast(random, &SAFE_ALPHABET, length);
 
             for ch in id.chars() {
                 let counter = chars.entry(ch).or_insert(0);
@@ -168,9 +164,31 @@ mod test_simple {
 
         for (_, &value) in &chars {
             let distribution =
-                (value * URL_SYMBOLS.len()) as f32 / (count as f32 * length as f32);
+                (value * SAFE_ALPHABET.len()) as f32 / (count as f32 * length as f32);
 
             assert_eq!(distribution.round(), 1.0)
         }
     }
+}
+
+pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u32>) -> String {
+    let x = alphabet.len();
+
+    if (x != 0) && ((x & (x - 1)) == 0) { // if x = 2^n
+        fast(random, alphabet, size)
+    } else {
+        format(random, alphabet, size)
+    }
+}
+
+pub fn custom(size: usize, alphabet: &[char]) -> String {
+    complex(size, alphabet, random)
+}
+
+pub fn generate(size: usize) -> String {
+    custom(size, &SAFE_ALPHABET)
+}
+
+pub fn simple() -> String {
+    generate(21)
 }
