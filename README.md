@@ -103,7 +103,7 @@ you can get the default alphabet from the `url` module:
 ```rust
 extern crate nanoid;
 
-fn randomBytes () -> u32 { /* ... */ }
+fn random (size: usize) -> Vec<u32> { /* ... */ }
 
 fn main() {
     nanoid::complex(10, nanoid::SAFE_ALPHABET, random); //=> "93ce_Ltuub"
