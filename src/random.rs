@@ -8,7 +8,7 @@ pub fn standart(size: usize) -> Vec<u32> {
     let mut result: Vec<u32> = vec![0; size];
 
     for i in 0..size {
-        result[i] = rng.next_u32();
+        result[i] = rng.gen::<u32>();
     }
 
     result
