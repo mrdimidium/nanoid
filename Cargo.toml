@@ -12,7 +12,13 @@ A tiny, secure, URL-friendly, unique string ID generator for Rust.
 """
 keywords = ["uuid", "random", "id", "url"]
 
-include = ["Cargo.toml", "LICENSE", "README.md"]
+include = ["Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
 
 [dependencies]
 rand = "0.4.1"
+
+[badges]
+appveyor = { repository = "nikolay-govorov/nanoid", branch = "master", service = "github" }
+travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }
+
+maintenance = { status = "actively-developed" }
