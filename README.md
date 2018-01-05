@@ -17,9 +17,6 @@ fn main() {
 **Safe.** It uses cryptographically strong random APIs
 and guarantees a proper distribution of symbols.
 
-**Small.** Only 179 bytes (minified and gzipped). No dependencies.
-It uses [Size Limit] to control size.
-
 **Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_~`)
 and has a similar number of unique IDs in just 21 symbols instead of 36.
 
@@ -77,7 +74,6 @@ Otherwise, the generator will not be secure.
 You can replace the default safe random generator using the `complex` module.
 For instance, to use a seed-based generator.
 
-
 ```rust
 extern crate nanoid;
 
@@ -93,11 +89,10 @@ fn main() {
 
         bytes
     }
-    
+
     nanoid::complex(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
 }
 ```
-
 
 `random` function must accept the array size and return an vector
 with random numbers.
