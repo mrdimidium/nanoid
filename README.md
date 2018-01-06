@@ -60,9 +60,11 @@ you can use the low-level `custom` module.
 extern crate nanoid;
 
 fn main() {
-   let id = nanoid::custom(
-       10, &['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f']
-   ); //=> "4f90d13a42"
+    let alphabet: [char; 16] = [
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
+    ];
+
+   let id = nanoid::custom(10, &alphabet); //=> "4f90d13a42"
 }
 ```
 
