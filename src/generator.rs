@@ -1,5 +1,5 @@
 use random;
-use alphabets;
+use alphabet;
 
 pub fn universal(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
     let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
@@ -79,7 +79,7 @@ mod test_fast {
         let lengths: Vec<usize> = vec![21, 5, 17, 134, 1];
 
         for l in lengths {
-            let id = fast(random::standart, &alphabets::SAFE, l);
+            let id = fast(random::standart, &alphabet::SAFE, l);
 
             assert_eq!(id.len(), l);
         }
@@ -88,10 +88,10 @@ mod test_fast {
     #[test]
     fn url_friendly () {
         for _ in 0..10 {
-            let id = fast(random::standart, &alphabets::SAFE, 21);
+            let id = fast(random::standart, &alphabet::SAFE, 21);
 
             for ch in id.chars() {
-                assert!(alphabets::SAFE.contains(&ch));
+                assert!(alphabet::SAFE.contains(&ch));
             }
         }
     }
@@ -103,7 +103,7 @@ mod test_fast {
         let mut ids = HashMap::new();
 
         for _ in 0..count {
-            let id = fast(random::standart, &alphabets::SAFE, 21);
+            let id = fast(random::standart, &alphabet::SAFE, 21);
 
             if ids.contains_key(&id) {
                 panic!();
@@ -121,7 +121,7 @@ mod test_fast {
         let mut chars = HashMap::new();
 
         for _ in 0..count {
-            let id = fast(random::standart, &alphabets::SAFE, length);
+            let id = fast(random::standart, &alphabet::SAFE, length);
 
             for ch in id.chars() {
                 let counter = chars.entry(ch).or_insert(0);
@@ -132,7 +132,7 @@ mod test_fast {
 
         for (_, &value) in &chars {
             let distribution =
-                (value * alphabets::SAFE.len()) as f32 / (count as f32 * length as f32);
+                (value * alphabet::SAFE.len()) as f32 / (count as f32 * length as f32);
 
             assert_eq!(distribution.round(), 1.0)
         }

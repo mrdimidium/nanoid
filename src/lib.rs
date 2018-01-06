@@ -2,9 +2,7 @@ extern crate rand;
 
 mod random;
 mod generator;
-mod alphabets;
-
-pub const SAFE_ALPHABET: &[char] = &alphabets::SAFE;
+pub mod alphabet;
 
 pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u32>) -> String {
     let x = alphabet.len();
@@ -20,7 +18,7 @@ pub fn custom(size: usize, alphabet: &[char]) -> String {
 }
 
 pub fn generate(size: usize) -> String {
-    custom(size, &alphabets::SAFE)
+    custom(size, &alphabet::SAFE)
 }
 
 pub fn simple() -> String {

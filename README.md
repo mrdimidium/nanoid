@@ -106,7 +106,7 @@ extern crate nanoid;
 fn random (size: usize) -> Vec<u32> { /* ... */ }
 
 fn main() {
-    nanoid::complex(10, nanoid::SAFE_ALPHABET, random); //=> "93ce_Ltuub"
+    nanoid::complex(10, nanoid::alphabet::SAFE, random); //=> "93ce_Ltuub"
 }
 ```
 
