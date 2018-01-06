@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.1.3
+* Renamed the safe alphabet
+* Added readme from rustdoc
+
 ## 0.1.2
 * Updated the random number engine.
 * Fixed bugs in documentation.
