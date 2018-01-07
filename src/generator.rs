@@ -98,7 +98,7 @@ mod test_fast {
 
     #[test]
     fn no_collisions () {
-        let count = 10^5;
+        let count = 1_000_000;
 
         let mut ids = HashMap::new();
 
@@ -115,7 +115,7 @@ mod test_fast {
 
     #[test]
     fn flat_distribution () {
-        let count = 10^1000;
+        let count = 1_000_000;
         let length : usize = 21;
 
         let mut chars = HashMap::new();
