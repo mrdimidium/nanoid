@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.2.0
+* Added support for Windows
+* Moved to system randomness generator
+
 ## 0.1.3
 * Renamed the safe alphabet
 * Added readme from rustdoc
