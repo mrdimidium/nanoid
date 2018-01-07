@@ -7,7 +7,7 @@ pub fn universal(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) 
 
     let mut id = String::new();
 
-    'main: loop {
+    loop {
         let bytes = random(step);
 
         for i in 0..step {
@@ -17,13 +17,11 @@ pub fn universal(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) 
                 id.push(alphabet[byte]);
 
                 if id.len() == size {
-                    break 'main;
+                    return id;
                 }
             }
         }
     }
-
-    id
 }
 
 #[cfg(test)]
