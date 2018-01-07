@@ -1,7 +1,7 @@
 use random;
 use alphabet;
 
-pub fn universal(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
+pub fn universal(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
     let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
     let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
 
@@ -30,10 +30,10 @@ mod test_universal {
 
     #[test]
     fn generates_random_string() {
-        fn random (size: usize) -> Vec<u32> {
-            let sequence: Vec<u32> = vec![2, 255, 0, 1];
+        fn random (size: usize) -> Vec<u8> {
+            let sequence: Vec<u8> = vec![2, 255, 0, 1];
 
-            let mut bytes: Vec<u32> = vec![];
+            let mut bytes: Vec<u8> = vec![];
 
             let mut i =  0;
             while i < size {
@@ -53,13 +53,13 @@ mod test_universal {
     }
 }
 
-pub fn fast(random: fn(usize) -> Vec<u32>, alphabet: &[char], size: usize) -> String {
+pub fn fast(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
     let mut id = String::new();
 
     let bytes = random(size);
 
     for i in 0..size {
-        let index = bytes[i] & ((alphabet.len() as u32) - 1);
+        let index = bytes[i] & ((alphabet.len() as u8) - 1);
 
         id.push(alphabet[index as usize]);
     }

@@ -81,11 +81,11 @@ For instance, to use a seed-based generator.
 ```rust
 extern crate nanoid;
 
-fn randomByte () -> u32 { 0 }
+fn randomByte () -> u8 { 0 }
 
 fn main() {
-    fn random (size: usize) -> Vec<u32> {
-        let mut bytes: Vec<u32> = vec![0; size];
+    fn random (size: usize) -> Vec<u8> {
+        let mut bytes: Vec<u8> = vec![0; size];
 
         for i in 0..size {
             bytes[i] = randomByte();
@@ -107,8 +107,8 @@ you can get the default alphabet from the `url` module:
 ```rust
 extern crate nanoid;
 
-fn random (size: usize) -> Vec<u32> {
-    let result: Vec<u32> = vec![0; size];
+fn random (size: usize) -> Vec<u8> {
+    let result: Vec<u8> = vec![0; size];
 
     result
 }

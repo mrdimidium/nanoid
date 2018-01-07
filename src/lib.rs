@@ -78,13 +78,13 @@
 //! ```rust
 //! extern crate nanoid;
 //!
-//! fn randomByte () -> u32 {
+//! fn randomByte () -> u8 {
 //!     0
 //! }
 //!
 //! fn main() {
-//!     fn random (size: usize) -> Vec<u32> {
-//!         let mut bytes: Vec<u32> = vec![0; size];
+//!     fn random (size: usize) -> Vec<u8> {
+//!         let mut bytes: Vec<u8> = vec![0; size];
 //!
 //!         for i in 0..size {
 //!             bytes[i] = randomByte();
@@ -106,8 +106,8 @@
 //! ```rust
 //! extern crate nanoid;
 //!
-//! fn random (size: usize) -> Vec<u32> {
-//!     let result: Vec<u32> = vec![0; size];
+//! fn random (size: usize) -> Vec<u8> {
+//!     let result: Vec<u8> = vec![0; size];
 //!
 //!     result
 //! }
@@ -124,11 +124,11 @@
 
 extern crate rand;
 
-mod random;
 mod generator;
+pub mod random;
 pub mod alphabet;
 
-pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u32>) -> String {
+pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u8>) -> String {
     let x = alphabet.len();
 
     // if (x == 2^n)
@@ -138,7 +138,7 @@ pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u32>) ->
 }
 
 pub fn custom(size: usize, alphabet: &[char]) -> String {
-    complex(size, alphabet, random::standart)
+    complex(size, alphabet, random::os)
 }
 
 pub fn generate(size: usize) -> String {

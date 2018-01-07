@@ -1,16 +1,11 @@
 use rand;
 
-use rand::Rng;
-use rand::os::OsRng;
+use rand::{Rng,OsRng,thread_rng};
 
-pub fn standart(size: usize) -> Vec<u32> {
-    let mut rng = rand::thread_rng();
+pub fn standart(size: usize) -> Vec<u8> {
+    let mut result: Vec<u8> = vec![0; size];
 
-    let mut result: Vec<u32> = vec![0; size];
-
-    for i in 0..size {
-        result[i] = rng.gen::<u32>();
-    }
+    thread_rng().fill_bytes(&mut result);
 
     result
 }
@@ -21,19 +16,17 @@ mod test_standart {
 
     #[test]
     fn generates_random_vectors() {
-        let bytes : Vec<u32> = standart(5);
+        let bytes = standart(5);
 
         assert_eq!(bytes.len(), 5);
     }
 }
 
-pub fn os(size: usize) -> Vec<u32> {
-    let mut random = OsRng::new().unwrap();
-    let mut result: Vec<u32> = vec![0; size];
+pub fn os(size: usize) -> Vec<u8> {
+    let mut rng = OsRng::new().unwrap();
+    let mut result = vec![0u8; size];
 
-    for i in 0..size {
-        result[i] = random.next_u32();
-    }
+    rng.fill_bytes(&mut result);
 
     result
 }
@@ -43,7 +36,7 @@ mod test_secure {
 
     #[test]
     fn generates_random_vectors() {
-        let bytes: Vec<u32> = os(5);
+        let bytes = os(5);
 
         assert_eq!(bytes.len(), 5);
     }
