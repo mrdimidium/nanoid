@@ -125,6 +125,7 @@ fn main() {
 * [Crystal](https://github.com/mamantoha/nanoid.cr)
 * [Go](https://github.com/matoous/go-nanoid)
 * [Elixir](https://github.com/railsmechanic/nanoid)
+* [Haskell](https://github.com/4e6/nanoid-hs)
 * [Java](https://github.com/aventrix/jnanoid)
 * [PHP](https://github.com/hidehalo/nanoid-php)
 * [Python](https://github.com/puyuan/py-nanoid)
