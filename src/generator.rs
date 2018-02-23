@@ -5,13 +5,13 @@ pub fn universal(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -
     let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
     let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
 
-    let mut id = String::new();
+    let mut id = String::with_capacity(size);
 
     loop {
         let bytes = random(step);
 
-        for i in 0..step {
-            let byte: usize = bytes[i] as usize & mask;
+        for &byte in &bytes {
+            let byte = byte as usize & mask;
 
             if alphabet.len() > byte {
                 id.push(alphabet[byte]);
@@ -31,22 +31,7 @@ mod test_universal {
     #[test]
     fn generates_random_string() {
         fn random (size: usize) -> Vec<u8> {
-            let sequence: Vec<u8> = vec![2, 255, 0, 1];
-
-            let mut bytes: Vec<u8> = vec![];
-
-            let mut i =  0;
-            while i < size {
-                let (elements, _) = sequence.split_at(if size - i > sequence.len() { sequence.len() } else { size - i });
-
-                for &el in elements {
-                    bytes.push(el);
-                }
-
-                i += sequence.len();
-            }
-
-            bytes
+            [2, 255, 0, 1].iter().cloned().cycle().take(size).collect()
         }
 
         assert_eq!(universal(random, &['a', 'b', 'c'], 4), "cabc");
@@ -54,29 +39,24 @@ mod test_universal {
 }
 
 pub fn fast(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
-    let mut id = String::new();
-
-    let bytes = random(size);
-
-    for i in 0..size {
-        let index = bytes[i] & ((alphabet.len() as u8) - 1);
-
-        id.push(alphabet[index as usize]);
-    }
-
-    id
+    random(size)
+        .iter()
+        .map(|&byte| alphabet[byte as usize % alphabet.len()])
+        .collect()
 }
 
 #[cfg(test)]
 mod test_fast {
     use super::*;
-    use std::collections::HashMap;
+    use std::collections::{HashMap, HashSet};
+
+    use {alphabet, random};
 
     #[test]
     fn correct_length () {
-        let lengths: Vec<usize> = vec![21, 5, 17, 134, 1];
+        let lengths = [21, 5, 17, 134, 1];
 
-        for l in lengths {
+        for &l in &lengths {
             let id = fast(random::standart, &alphabet::SAFE, l);
 
             assert_eq!(id.len(), l);
@@ -97,26 +77,22 @@ mod test_fast {
     #[test]
     fn no_collisions () {
         let count = 1_000_000;
+        let length: usize = 21;
 
-        let mut ids = HashMap::new();
+        let mut ids = HashSet::with_capacity(count);
 
         for _ in 0..count {
-            let id = fast(random::standart, &alphabet::SAFE, 21);
-
-            if ids.contains_key(&id) {
-                panic!();
-            }
-
-            ids.insert(id, true);
+            let id = fast(random::standart, &alphabet::SAFE, length);
+            assert!(ids.insert(id));
         }
     }
 
     #[test]
     fn flat_distribution () {
         let count = 1_000_000;
-        let length : usize = 21;
+        let length: usize = 21;
 
-        let mut chars = HashMap::new();
+        let mut chars = HashMap::with_capacity(alphabet::SAFE.len());
 
         for _ in 0..count {
             let id = fast(random::standart, &alphabet::SAFE, length);
@@ -128,7 +104,7 @@ mod test_fast {
             }
         }
 
-        for (_, &value) in &chars {
+        for value in chars.values() {
             let distribution =
                 (value * alphabet::SAFE.len()) as f32 / (count as f32 * length as f32);
 
