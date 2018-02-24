@@ -119,8 +119,8 @@
 //!
 
 #![doc(html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
-    html_favicon_url = "https://www.rust-lang.org/favicon.ico",
-    html_root_url = "https://docs.rs/nanoid")]
+       html_favicon_url = "https://www.rust-lang.org/favicon.ico",
+       html_root_url = "https://docs.rs/nanoid")]
 
 extern crate rand;
 
@@ -130,9 +130,12 @@ pub mod alphabet;
 
 pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u8>) -> String {
     let x = alphabet.len();
+    assert!(
+        x <= u8::max_value() as usize,
+        "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
+    );
 
-    // if (x == 2^n)
-    let generator = if (x != 0) && ((x & (x - 1)) == 0) { generator::fast } else { generator::universal };
+    let generator = if x.is_power_of_two() { generator::fast } else { generator::universal };
 
     generator(random, alphabet, size)
 }
@@ -147,4 +150,16 @@ pub fn generate(size: usize) -> String {
 
 pub fn simple() -> String {
     generate(21)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn bad_alphabet() {
+        let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
+        custom(21, &alphabet);
+    }
 }
