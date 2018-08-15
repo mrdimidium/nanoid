@@ -57,7 +57,7 @@ mod test_fast {
         let lengths = [21, 5, 17, 134, 1];
 
         for &l in &lengths {
-            let id = fast(random::standart, &alphabet::SAFE, l);
+            let id = fast(random::standard, &alphabet::SAFE, l);
 
             assert_eq!(id.len(), l);
         }
@@ -66,7 +66,7 @@ mod test_fast {
     #[test]
     fn url_friendly () {
         for _ in 0..10 {
-            let id = fast(random::standart, &alphabet::SAFE, 21);
+            let id = fast(random::standard, &alphabet::SAFE, 21);
 
             for ch in id.chars() {
                 assert!(alphabet::SAFE.contains(&ch));
@@ -82,7 +82,7 @@ mod test_fast {
         let mut ids = HashSet::with_capacity(count);
 
         for _ in 0..count {
-            let id = fast(random::standart, &alphabet::SAFE, length);
+            let id = fast(random::standard, &alphabet::SAFE, length);
             assert!(ids.insert(id));
         }
     }
@@ -95,7 +95,7 @@ mod test_fast {
         let mut chars = HashMap::with_capacity(alphabet::SAFE.len());
 
         for _ in 0..count {
-            let id = fast(random::standart, &alphabet::SAFE, length);
+            let id = fast(random::standard, &alphabet::SAFE, length);
 
             for ch in id.chars() {
                 let counter = chars.entry(ch).or_insert(0);

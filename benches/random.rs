@@ -11,6 +11,6 @@ fn os(b: &mut Bencher) {
 }
 
 #[bench]
-fn standart(b: &mut Bencher) {
-    b.iter(|| nanoid::random::standart(100));
+fn standard(b: &mut Bencher) {
+    b.iter(|| nanoid::random::standard(100));
 }
