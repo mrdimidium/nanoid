@@ -2,7 +2,7 @@ use rand;
 
 use rand::{Rng,OsRng,thread_rng};
 
-pub fn standart(size: usize) -> Vec<u8> {
+pub fn standard(size: usize) -> Vec<u8> {
     let mut result: Vec<u8> = vec![0; size];
 
     thread_rng().fill_bytes(&mut result);
@@ -11,12 +11,12 @@ pub fn standart(size: usize) -> Vec<u8> {
 }
 
 #[cfg(test)]
-mod test_standart {
+mod test_standard {
     use super::*;
 
     #[test]
     fn generates_random_vectors() {
-        let bytes = standart(5);
+        let bytes = standard(5);
 
         assert_eq!(bytes.len(), 5);
     }
