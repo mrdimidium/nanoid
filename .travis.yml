@@ -3,6 +3,15 @@ language: rust
 rust:
   - nightly
 
+before_script:
+  - rustup component add clippy rustfmt
+
 matrix:
   allow_failures:
     - rust: nightly
+
+script:
+  - cargo build --release --verbose --locked
+  - cargo clippy --all-targets --all-features --verbose -- -D warnings
+  - cargo fmt --all --verbose -- --verbose --check
+  - cargo test --release --verbose

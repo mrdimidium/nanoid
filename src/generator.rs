@@ -1,6 +1,3 @@
-use random;
-use alphabet;
-
 pub fn universal(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
     let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
     let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
@@ -30,7 +27,7 @@ mod test_universal {
 
     #[test]
     fn generates_random_string() {
-        fn random (size: usize) -> Vec<u8> {
+        fn random(size: usize) -> Vec<u8> {
             [2, 255, 0, 1].iter().cloned().cycle().take(size).collect()
         }
 
@@ -47,13 +44,15 @@ pub fn fast(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> Str
 
 #[cfg(test)]
 mod test_fast {
-    use super::*;
     use std::collections::{HashMap, HashSet};
 
-    use {alphabet, random};
+    use alphabet;
+    use random;
+
+    use super::*;
 
     #[test]
-    fn correct_length () {
+    fn correct_length() {
         let lengths = [21, 5, 17, 134, 1];
 
         for &l in &lengths {
@@ -64,7 +63,7 @@ mod test_fast {
     }
 
     #[test]
-    fn url_friendly () {
+    fn url_friendly() {
         for _ in 0..10 {
             let id = fast(random::standard, &alphabet::SAFE, 21);
 
@@ -75,7 +74,7 @@ mod test_fast {
     }
 
     #[test]
-    fn no_collisions () {
+    fn no_collisions() {
         let count = 1_000_000;
         let length: usize = 21;
 
@@ -88,7 +87,7 @@ mod test_fast {
     }
 
     #[test]
-    fn flat_distribution () {
+    fn flat_distribution() {
         let count = 1_000_000;
         let length: usize = 21;
 
@@ -104,11 +103,10 @@ mod test_fast {
             }
         }
 
-        for value in chars.values() {
-            let distribution =
-                (value * alphabet::SAFE.len()) as f32 / (count as f32 * length as f32);
+        for &value in chars.values() {
+            let distribution = (value * alphabet::SAFE.len()) as f64 / (count * length) as f64;
 
-            assert_eq!(distribution.round(), 1.0)
+            assert_eq!((distribution.round() - 1.0).abs() < 0.00001, true);
         }
     }
 }

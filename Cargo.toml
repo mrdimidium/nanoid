@@ -17,6 +17,14 @@ include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
 [dependencies]
 rand = "0.4.1"
 
+[dev-dependencies.cargo-husky]
+version = "1"
+default-features = false
+features = [
+    "prepush-hook", "precommit-hook", "postmerge-hook",
+    "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt",
+]
+
 [badges]
 appveyor = { repository = "nikolay-govorov/nanoid", branch = "master", service = "github" }
 travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }

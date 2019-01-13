@@ -1,6 +1,4 @@
-use rand;
-
-use rand::{Rng,OsRng,thread_rng};
+use rand::{thread_rng, OsRng, Rng};
 
 pub fn standard(size: usize) -> Vec<u8> {
     let mut result: Vec<u8> = vec![0; size];
@@ -31,8 +29,9 @@ pub fn os(size: usize) -> Vec<u8> {
     result
 }
 
+#[cfg(test)]
 mod test_secure {
-    use super::*;
+    use super::os;
 
     #[test]
     fn generates_random_vectors() {

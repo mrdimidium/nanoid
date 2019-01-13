@@ -1,9 +1,9 @@
-extern crate rand;
 extern crate nanoid;
+extern crate rand;
 
 use rand::Rng;
 
-fn random (size: usize) -> Vec<u8> {
+fn random(size: usize) -> Vec<u8> {
     let mut rng = rand::thread_rng();
     rng.gen_iter::<u8>().take(size).collect()
 }
