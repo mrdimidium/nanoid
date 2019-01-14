@@ -13,9 +13,10 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid::simple(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+//!    let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
 //! }
 //! ```
 //!
@@ -28,9 +29,10 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid::simple(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+//!    let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
 //! }
 //! ```
 //!
@@ -44,9 +46,10 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid::generate(10); //=> "IRFa~VaY2b"
+//!    let id = nanoid!(10); //=> "IRFa~VaY2b"
 //! }
 //! ```
 //!
@@ -57,13 +60,14 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn main() {
 //!     let alphabet: [char; 16] = [
 //!         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
 //!     ];
 //!
-//!    let id = nanoid::custom(10, &alphabet); //=> "4f90d13a42"
+//!    let id = nanoid!(10, &alphabet); //=> "4f90d13a42"
 //! }
 //! ```
 //!
@@ -77,6 +81,7 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn randomByte () -> u8 {
 //!     0
@@ -93,7 +98,7 @@
 //!         bytes
 //!     }
 //!
-//!     nanoid::complex(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
+//!     nanoid!(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
 //! }
 //! ```
 //!
@@ -105,6 +110,7 @@
 //!
 //! ```rust
 //! extern crate nanoid;
+//! use nanoid::nanoid;
 //!
 //! fn random (size: usize) -> Vec<u8> {
 //!     let result: Vec<u8> = vec![0; size];
@@ -113,7 +119,7 @@
 //! }
 //!
 //! fn main() {
-//!     nanoid::complex(10, &nanoid::alphabet::SAFE, random); //=> "93ce_Ltuub"
+//!     nanoid!(10, &nanoid::alphabet::SAFE, random); //=> "93ce_Ltuub"
 //! }
 //! ```
 //!
@@ -146,26 +152,66 @@ pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u8>) -> 
     generator(random, alphabet, size)
 }
 
-pub fn custom(size: usize, alphabet: &[char]) -> String {
-    complex(size, alphabet, random::os)
-}
-
-pub fn generate(size: usize) -> String {
-    custom(size, &alphabet::SAFE)
-}
-
-pub fn simple() -> String {
-    generate(21)
+#[macro_export]
+macro_rules! nanoid {
+    // simple
+    () => {
+        $crate::complex(21, &$crate::alphabet::SAFE, $crate::random::os)
+    };
+    // generate
+    ($size:tt) => {
+        $crate::complex($size, &$crate::alphabet::SAFE, $crate::random::os)
+    };
+    // custom
+    ($size:tt, $alphabet:expr) => {
+        $crate::complex($size, $alphabet, $crate::random::os)
+    };
+    // complex
+    ($size:tt, $alphabet:expr, $random:expr) => {
+        $crate::complex($size, $alphabet, $random)
+    };
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    mod macro_rules {
+        use super::*;
+
+        #[test]
+        fn simple() {
+            let id: String = nanoid!();
+
+            assert_eq!(id.len(), 21);
+        }
+
+        #[test]
+        fn generate() {
+            let id: String = nanoid!(42);
+
+            assert_eq!(id.len(), 42);
+        }
+
+        #[test]
+        fn custom() {
+            let id: String = nanoid!(42, &alphabet::SAFE);
+
+            assert_eq!(id.len(), 42);
+        }
+
+        #[test]
+        fn complex() {
+            let id: String = nanoid!(4, &alphabet::SAFE, random::os);
+
+            assert_eq!(id.len(), 4);
+        }
+    }
+
     #[test]
     #[should_panic]
     fn bad_alphabet() {
         let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
-        custom(21, &alphabet);
+        nanoid!(21, &alphabet);
     }
 }

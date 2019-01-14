@@ -1,6 +1,7 @@
 extern crate nanoid;
 extern crate rand;
 
+use nanoid::nanoid;
 use rand::Rng;
 
 fn random(size: usize) -> Vec<u8> {
@@ -9,5 +10,5 @@ fn random(size: usize) -> Vec<u8> {
 }
 
 fn main() {
-    nanoid::complex(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
+    nanoid!(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
 }

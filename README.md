@@ -10,9 +10,10 @@ A tiny, secure, URL-friendly, unique string ID generator for Rust
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn main() {
-   let id = nanoid::simple(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+   let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
 }
 ```
 
@@ -31,9 +32,10 @@ with 21 characters.
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn main() {
-   let id = nanoid::simple(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+   let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
 }
 ```
 
@@ -47,9 +49,10 @@ you can pass the length as an argument generate function:
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn main() {
-   let id = nanoid::generate(10); //=> "IRFa~VaY2b"
+   let id = nanoid!(10); //=> "IRFa~VaY2b"
 }
 ```
 
@@ -60,13 +63,14 @@ you can use the low-level `custom` module.
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn main() {
     let alphabet: [char; 16] = [
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
     ];
 
-   let id = nanoid::custom(10, &alphabet); //=> "4f90d13a42"
+   let id = nanoid(10, &alphabet); //=> "4f90d13a42"
 }
 ```
 
@@ -80,6 +84,7 @@ For instance, to use a seed-based generator.
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn randomByte () -> u8 { 0 }
 
@@ -94,7 +99,7 @@ fn main() {
         bytes
     }
 
-    nanoid::complex(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
+    nanoid!(10, &['a', 'b', 'c', 'd', 'e', 'f'], random); //=> "fbaefaadeb"
 }
 ```
 
@@ -106,6 +111,7 @@ you can get the default alphabet from the `url` module:
 
 ```rust
 extern crate nanoid;
+use nanoid::nanoid;
 
 fn random (size: usize) -> Vec<u8> {
     let result: Vec<u8> = vec![0; size];
@@ -114,7 +120,7 @@ fn random (size: usize) -> Vec<u8> {
 }
 
 fn main() {
-    nanoid::complex(10, &nanoid::alphabet::SAFE, random); //=> "93ce_Ltuub"
+    nanoid!(10, &nanoid::alphabet::SAFE, random); //=> "93ce_Ltuub"
 }
 ```
 

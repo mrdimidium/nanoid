@@ -6,7 +6,7 @@
 /// # Example
 ///
 /// ```
-/// let id = nanoid::custom(10, &nanoid::alphabet::SAFE);
+/// let id = nanoid::nanoid!(10, &nanoid::alphabet::SAFE);
 /// ```
 pub const SAFE: [char; 64] = [
     '_', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
