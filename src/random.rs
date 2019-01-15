@@ -1,9 +1,9 @@
-use rand::{thread_rng, OsRng, Rng};
+use rand::{rngs::OsRng, thread_rng, Rng};
 
 pub fn standard(size: usize) -> Vec<u8> {
     let mut result: Vec<u8> = vec![0; size];
 
-    thread_rng().fill_bytes(&mut result);
+    thread_rng().fill(&mut result[..]);
 
     result
 }
@@ -24,7 +24,7 @@ pub fn os(size: usize) -> Vec<u8> {
     let mut rng = OsRng::new().unwrap();
     let mut result = vec![0u8; size];
 
-    rng.fill_bytes(&mut result);
+    rng.fill(&mut result[..]);
 
     result
 }
