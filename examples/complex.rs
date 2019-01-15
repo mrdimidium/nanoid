@@ -2,11 +2,14 @@ extern crate nanoid;
 extern crate rand;
 
 use nanoid::nanoid;
-use rand::Rng;
+
+use rand::distributions::Standard;
+use rand::{thread_rng, Rng};
 
 fn random(size: usize) -> Vec<u8> {
-    let mut rng = rand::thread_rng();
-    rng.gen_iter::<u8>().take(size).collect()
+    let mut rng = thread_rng();
+
+    rng.sample_iter(&Standard).take(size).collect()
 }
 
 fn main() {

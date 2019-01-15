@@ -133,79 +133,47 @@
 extern crate rand;
 
 pub mod alphabet;
-mod generator;
-pub mod random;
+pub mod rngs;
 
-pub fn complex(size: usize, alphabet: &[char], random: fn(usize) -> Vec<u8>) -> String {
-    let x = alphabet.len();
+pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
     assert!(
-        x <= u8::max_value() as usize,
+        alphabet.len() <= u8::max_value() as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
-    let generator = if x.is_power_of_two() {
-        generator::fast
-    } else {
-        generator::universal
-    };
+    let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
+    let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
 
-    generator(random, alphabet, size)
-}
+    let mut id = String::with_capacity(size);
 
-#[macro_export]
-macro_rules! nanoid {
-    // simple
-    () => {
-        $crate::complex(21, &$crate::alphabet::SAFE, $crate::random::os)
-    };
-    // generate
-    ($size:tt) => {
-        $crate::complex($size, &$crate::alphabet::SAFE, $crate::random::os)
-    };
-    // custom
-    ($size:tt, $alphabet:expr) => {
-        $crate::complex($size, $alphabet, $crate::random::os)
-    };
-    // complex
-    ($size:tt, $alphabet:expr, $random:expr) => {
-        $crate::complex($size, $alphabet, $random)
-    };
+    loop {
+        let bytes = random(step);
+
+        for &byte in &bytes {
+            let byte = byte as usize & mask;
+
+            if alphabet.len() > byte {
+                id.push(alphabet[byte]);
+
+                if id.len() == size {
+                    return id;
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
-mod tests {
+mod test_format {
     use super::*;
 
-    mod macro_rules {
-        use super::*;
-
-        #[test]
-        fn simple() {
-            let id: String = nanoid!();
-
-            assert_eq!(id.len(), 21);
+    #[test]
+    fn generates_random_string() {
+        fn random(size: usize) -> Vec<u8> {
+            [2, 255, 0, 1].iter().cloned().cycle().take(size).collect()
         }
 
-        #[test]
-        fn generate() {
-            let id: String = nanoid!(42);
-
-            assert_eq!(id.len(), 42);
-        }
-
-        #[test]
-        fn custom() {
-            let id: String = nanoid!(42, &alphabet::SAFE);
-
-            assert_eq!(id.len(), 42);
-        }
-
-        #[test]
-        fn complex() {
-            let id: String = nanoid!(4, &alphabet::SAFE, random::os);
-
-            assert_eq!(id.len(), 4);
-        }
+        assert_eq!(format(random, &['a', 'b', 'c'], 4), "cabc");
     }
 
     #[test]
@@ -213,5 +181,61 @@ mod tests {
     fn bad_alphabet() {
         let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
         nanoid!(21, &alphabet);
+    }
+}
+
+#[macro_export]
+macro_rules! nanoid {
+    // simple
+    () => {
+        $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, 21)
+    };
+
+    // generate
+    ($size:tt) => {
+        $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, $size)
+    };
+
+    // custom
+    ($size:tt, $alphabet:expr) => {
+        $crate::format($crate::rngs::default, $alphabet, $size)
+    };
+
+    // complex
+    ($size:tt, $alphabet:expr, $random:expr) => {
+        $crate::format($random, $alphabet, $size)
+    };
+}
+
+#[cfg(test)]
+mod test_macros {
+    use super::*;
+
+    #[test]
+    fn simple() {
+        let id: String = nanoid!();
+
+        assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn generate() {
+        let id: String = nanoid!(42);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn custom() {
+        let id: String = nanoid!(42, &alphabet::SAFE);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn complex() {
+        let id: String = nanoid!(4, &alphabet::SAFE, rngs::default);
+
+        assert_eq!(id.len(), 4);
     }
 }
