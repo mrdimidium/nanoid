@@ -1,32 +1,23 @@
 [package]
 name = "nanoid"
 version = "0.2.0"
-authors = ["Nikolay Govorov <nikolay_govorov@bk.ru>"]
+authors = ["Nikolay Govorov<nikolay_govorov@bk.ru>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/nikolay-govorov/nanoid.git"
 documentation = "https://docs.rs/nanoid"
 homepage = "https://github.com/nikolay-govorov/nanoid"
-description = """
-A tiny, secure, URL-friendly, unique string ID generator for Rust.
-"""
+description = "A tiny, secure, URL-friendly, unique string ID generator for Rust."
 keywords = ["uuid", "random", "id", "url"]
-
 include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
+
+[badges]
+maintenance = { status = "actively-developed" }
+appveyor = { repository = "nikolay-govorov/nanoid", branch = "master", service = "github" }
+travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }
 
 [dependencies]
 rand = "0.6"
 
-[dev-dependencies.cargo-husky]
-version = "1"
-default-features = false
-features = [
-    "prepush-hook", "precommit-hook", "postmerge-hook",
-    "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt",
-]
-
-[badges]
-appveyor = { repository = "nikolay-govorov/nanoid", branch = "master", service = "github" }
-travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }
-
-maintenance = { status = "actively-developed" }
+[dev-dependencies]
+cargo-husky = { version = "1", default-features = false, features = ["prepush-hook", "precommit-hook", "postmerge-hook", "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt"] }
