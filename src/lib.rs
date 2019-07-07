@@ -144,6 +144,9 @@ pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> S
     let mask = (2 << ((alphabet.len() as f64 - 1.0).ln() / 2.0_f64.ln()) as i64) - 1;
     let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
 
+    // Assert that the masking does not truncate the alphabet. (See #9)
+    debug_assert!(alphabet.len() <= mask + 1);
+
     let mut id = String::with_capacity(size);
 
     loop {
@@ -182,6 +185,14 @@ mod test_format {
         let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
         nanoid!(21, &alphabet);
     }
+
+    #[test]
+    fn non_power_2() {
+        let id: String = nanoid!(42, &alphabet::SAFE[0..62]);
+
+        assert_eq!(id.len(), 42);
+    }
+
 }
 
 #[macro_export]
