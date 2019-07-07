@@ -142,7 +142,7 @@ pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> S
     );
 
     let mask = alphabet.len().next_power_of_two() -1;
-    let step: usize = (1.6_f64 * (mask * size) as f64).ceil() as usize;
+    let step: usize = 8 * size / 5;
 
     // Assert that the masking does not truncate the alphabet. (See #9)
     debug_assert!(alphabet.len() <= mask + 1);
