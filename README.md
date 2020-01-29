@@ -13,21 +13,21 @@ extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
-   let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+   let id = nanoid!(); //=> "Uakgb_J5m9g-0JDMbcJqLJ"
 }
 ```
 
 **Safe.** It uses cryptographically strong random APIs
 and guarantees a proper distribution of symbols.
 
-**Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_~`)
+**Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_-`)
 and has a similar number of unique IDs in just 21 symbols instead of 36.
 
 ## Usage
 
 ### Simple
 
-The main module uses URL-friendly symbols (`A-Za-z0-9_~`) and returns an ID
+The main module uses URL-friendly symbols (`A-Za-z0-9_-`) and returns an ID
 with 21 characters.
 
 ```rust
@@ -52,7 +52,7 @@ extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
-   let id = nanoid!(10); //=> "IRFa~VaY2b"
+   let id = nanoid!(10); //=> "IRFa-VaY2b"
 }
 ```
 
