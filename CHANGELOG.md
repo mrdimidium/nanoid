@@ -1,6 +1,13 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0
+* merge #3, from @TheIronBorn: various small improvements
+* merge #4, from @delimitry: fix typo in function name
+* Replace the `~` to `-` in alphabet
+* Add the common macros
+* Refactor structure. Remove pseudo-fast generator. Move format in `lib.rs`
+
 ## 0.2.0
 * Added support for Windows
 * Moved to system randomness generator

@@ -1,6 +1,6 @@
 [package]
 name = "nanoid"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Nikolay Govorov<nikolay_govorov@bk.ru>"]
 license = "MIT"
 readme = "README.md"
