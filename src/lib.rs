@@ -8,7 +8,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! nanoid = "0.1.3"
+//! nanoid = "0.3.0"
 //! ```
 //!
 //! ```rust

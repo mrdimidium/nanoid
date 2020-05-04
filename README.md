@@ -25,6 +25,13 @@ and has a similar number of unique IDs in just 21 symbols instead of 36.
 
 ## Usage
 
+### Install
+
+```toml
+[dependencies]
+nanoid = "0.3.0"
+```
+
 ### Simple
 
 The main module uses URL-friendly symbols (`A-Za-z0-9_-`) and returns an ID
