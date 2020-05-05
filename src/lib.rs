@@ -16,7 +16,7 @@
 //! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+//!    let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
 //! }
 //! ```
 //!
@@ -32,7 +32,7 @@
 //! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid!(); //=> "Uakgb_J5m9g~0JDMbcJqLJ"
+//!    let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
 //! }
 //! ```
 //!
@@ -141,7 +141,7 @@ pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> S
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
-    let mask = alphabet.len().next_power_of_two() -1;
+    let mask = alphabet.len().next_power_of_two() - 1;
     let step: usize = 8 * size / 5;
 
     // Assert that the masking does not truncate the alphabet. (See #9)
@@ -192,7 +192,6 @@ mod test_format {
 
         assert_eq!(id.len(), 42);
     }
-
 }
 
 #[macro_export]
