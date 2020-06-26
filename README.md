@@ -65,8 +65,8 @@ fn main() {
 
 ### Custom Alphabet or Length
 
-If you want to change the ID's alphabet or length
-you can use the low-level `custom` module.
+If you want to change the ID's alphabet or length, you can simply pass the
+custom alphabet to the `nanoid!()` macro as the second parameter:
 
 ```rust
 extern crate nanoid;
@@ -77,7 +77,7 @@ fn main() {
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
     ];
 
-   let id = nanoid(10, &alphabet); //=> "4f90d13a42"
+   let id = nanoid!(10, &alphabet); //=> "4f90d13a42"
 }
 ```
 
