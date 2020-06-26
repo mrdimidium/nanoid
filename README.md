@@ -9,7 +9,6 @@
 A tiny, secure, URL-friendly, unique string ID generator for Rust
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
@@ -38,7 +37,6 @@ The main module uses URL-friendly symbols (`A-Za-z0-9_-`) and returns an ID
 with 21 characters.
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
@@ -55,7 +53,6 @@ If you want to reduce ID length (and increase collisions probability),
 you can pass the length as an argument generate function:
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
@@ -69,7 +66,6 @@ If you want to change the ID's alphabet or length
 you can use the low-level `custom` module.
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
@@ -90,7 +86,6 @@ You can replace the default safe random generator using the `complex` module.
 For instance, to use a seed-based generator.
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn randomByte () -> u8 { 0 }
@@ -117,7 +112,6 @@ If you want to use the same URL-friendly symbols with `format`,
 you can get the default alphabet from the `url` module:
 
 ```rust
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn random (size: usize) -> Vec<u8> {
