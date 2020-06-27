@@ -249,3 +249,6 @@ mod test_macros {
         assert_eq!(id.len(), 4);
     }
 }
+
+#[cfg(doctest)]
+doc_comment::doctest!("../README.md");
