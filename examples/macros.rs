@@ -1,4 +1,3 @@
-extern crate nanoid;
 use nanoid::nanoid;
 
 fn main() {
