@@ -1,6 +1,3 @@
-extern crate nanoid;
-extern crate rand;
-
 use nanoid::nanoid;
 
 use rand::distributions::Standard;

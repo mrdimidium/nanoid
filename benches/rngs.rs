@@ -1,6 +1,5 @@
 #![feature(test)]
 
-extern crate nanoid;
 extern crate test;
 
 use test::Bencher;

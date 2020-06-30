@@ -12,7 +12,6 @@
 //! ```
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn main() {
@@ -28,7 +27,6 @@
 //! with 21 characters.
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn main() {
@@ -45,7 +43,6 @@
 //! you can pass the length as an argument generate function:
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn main() {
@@ -59,7 +56,6 @@
 //! you can use the low-level `custom` module.
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn main() {
@@ -80,7 +76,6 @@
 //! For instance, to use a seed-based generator.
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn randomByte () -> u8 {
@@ -109,7 +104,6 @@
 //! you can get the default alphabet from the `url` module:
 //!
 //! ```rust
-//! extern crate nanoid;
 //! use nanoid::nanoid;
 //!
 //! fn random (size: usize) -> Vec<u8> {
@@ -129,8 +123,6 @@
     html_favicon_url = "https://www.rust-lang.org/favicon.ico",
     html_root_url = "https://docs.rs/nanoid"
 )]
-
-extern crate rand;
 
 pub mod alphabet;
 pub mod rngs;
