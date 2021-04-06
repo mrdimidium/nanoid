@@ -88,14 +88,14 @@ For instance, to use a seed-based generator.
 ```rust
 use nanoid::nanoid;
 
-fn randomByte () -> u8 { 0 }
+fn random_byte () -> u8 { 0 }
 
 fn main() {
     fn random (size: usize) -> Vec<u8> {
         let mut bytes: Vec<u8> = vec![0; size];
 
         for i in 0..size {
-            bytes[i] = randomByte();
+            bytes[i] = random_byte();
         }
 
         bytes

@@ -1,6 +1,6 @@
 use rand::{
     rngs::{SmallRng, StdRng},
-    FromEntropy, Rng,
+    Rng, SeedableRng,
 };
 
 pub fn default(size: usize) -> Vec<u8> {
