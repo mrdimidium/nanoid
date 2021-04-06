@@ -78,7 +78,7 @@
 //! ```rust
 //! use nanoid::nanoid;
 //!
-//! fn randomByte () -> u8 {
+//! fn random_byte () -> u8 {
 //!     0
 //! }
 //!
@@ -87,7 +87,7 @@
 //!         let mut bytes: Vec<u8> = vec![0; size];
 //!
 //!         for i in 0..size {
-//!             bytes[i] = randomByte();
+//!             bytes[i] = random_byte();
 //!         }
 //!
 //!         bytes
