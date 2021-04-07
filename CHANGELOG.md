@@ -1,6 +1,17 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0
+* merge #25, from @fundon: bump the rand#0.8
+* merge #18, from @svenstaro
+* merge #21, from @svenstaro
+* merge #19, from @svenstaro
+* merge #20, from @svenstaro
+* merge #16, from @Exr0n
+* merge #15, from @Exr0n
+* merge #10, from @nbraud
+
+
 ## 0.3.0
 * merge #3, from @TheIronBorn: various small improvements
 * merge #4, from @delimitry: fix typo in function name

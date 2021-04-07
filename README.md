@@ -28,7 +28,7 @@ and has a similar number of unique IDs in just 21 symbols instead of 36.
 
 ```toml
 [dependencies]
-nanoid = "0.3.0"
+nanoid = "0.4.0"
 ```
 
 ### Simple
