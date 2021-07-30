@@ -1,13 +1,8 @@
-use rand::{
-    rngs::{SmallRng, StdRng},
-    Rng, SeedableRng,
-};
-
 pub fn default(size: usize) -> Vec<u8> {
-    let mut rng = StdRng::from_entropy();
     let mut result: Vec<u8> = vec![0; size];
 
-    rng.fill(&mut result[..]);
+    getrandom::getrandom(&mut result[..])
+        .unwrap_or_else(|err| panic!("could not retreive random bytes: {}", err));
 
     result
 }
@@ -25,10 +20,10 @@ mod test_default {
 }
 
 pub fn non_secure(size: usize) -> Vec<u8> {
-    let mut rng = SmallRng::from_entropy();
     let mut result = vec![0u8; size];
 
-    rng.fill(&mut result[..]);
+    getrandom::getrandom(&mut result[..])
+        .unwrap_or_else(|err| panic!("could not retreive random bytes: {}", err));
 
     result
 }
