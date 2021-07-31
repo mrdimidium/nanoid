@@ -190,17 +190,17 @@ mod test_format {
 macro_rules! nanoid {
     // simple
     () => {
-        $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, 21)
+        $crate::format($crate::rngs::random_bytes, &$crate::alphabet::SAFE, 21)
     };
 
     // generate
     ($size:tt) => {
-        $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, $size)
+        $crate::format($crate::rngs::random_bytes, &$crate::alphabet::SAFE, $size)
     };
 
     // custom
     ($size:tt, $alphabet:expr) => {
-        $crate::format($crate::rngs::default, $alphabet, $size)
+        $crate::format($crate::rngs::random_bytes, $alphabet, $size)
     };
 
     // complex
@@ -236,7 +236,7 @@ mod test_macros {
 
     #[test]
     fn complex() {
-        let id: String = nanoid!(4, &alphabet::SAFE, rngs::default);
+        let id: String = nanoid!(4, &alphabet::SAFE, rngs::random_bytes);
 
         assert_eq!(id.len(), 4);
     }
