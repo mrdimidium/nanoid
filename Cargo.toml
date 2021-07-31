@@ -23,4 +23,5 @@ getrandom = "0.2.3"
 [dev-dependencies]
 cargo-husky = { version = "1", default-features = false, features = ["prepush-hook", "precommit-hook", "postmerge-hook", "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt"] }
 doc-comment = "0.3"
-rand = { version = "0.8", features = ["small_rng"] }
+rand = { version = "0.8" }
+uuid = { version = "0.8", features = ["serde", "v4"] }
