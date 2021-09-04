@@ -3,7 +3,7 @@
 //! **Safe.** It uses cryptographically strong random APIs
 //! and guarantees a proper distribution of symbols.
 //!
-//! **Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_~`)
+//! **Compact.** It uses a larger alphabet than UUID (`A-Za-z0-9_-`)
 //! and has a similar number of unique IDs in just 21 symbols instead of 36.
 //!
 //! ```toml
@@ -23,7 +23,7 @@
 //!
 //! ### Simple
 //!
-//! The main module uses URL-friendly symbols (`A-Za-z0-9_~`) and returns an ID
+//! The main module uses URL-friendly symbols (`A-Za-z0-9_-`) and returns an ID
 //! with 21 characters.
 //!
 //! ```rust
