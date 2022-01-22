@@ -194,17 +194,17 @@ macro_rules! nanoid {
     };
 
     // generate
-    ($size:tt) => {
+    ($size:expr) => {
         $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, $size)
     };
 
     // custom
-    ($size:tt, $alphabet:expr) => {
+    ($size:expr, $alphabet:expr) => {
         $crate::format($crate::rngs::default, $alphabet, $size)
     };
 
     // complex
-    ($size:tt, $alphabet:expr, $random:expr) => {
+    ($size:expr, $alphabet:expr, $random:expr) => {
         $crate::format($random, $alphabet, $size)
     };
 }
