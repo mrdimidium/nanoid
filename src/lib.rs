@@ -240,6 +240,13 @@ mod test_macros {
 
         assert_eq!(id.len(), 4);
     }
+
+    #[test]
+    fn simple_expression() {
+        let id: String = nanoid!(42 / 2);
+
+        assert_eq!(id.len(), 21);
+    }
 }
 
 #[cfg(doctest)]
