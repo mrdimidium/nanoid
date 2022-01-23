@@ -194,17 +194,17 @@ macro_rules! nanoid {
     };
 
     // generate
-    ($size:tt) => {
+    ($size:expr) => {
         $crate::format($crate::rngs::default, &$crate::alphabet::SAFE, $size)
     };
 
     // custom
-    ($size:tt, $alphabet:expr) => {
+    ($size:expr, $alphabet:expr) => {
         $crate::format($crate::rngs::default, $alphabet, $size)
     };
 
     // complex
-    ($size:tt, $alphabet:expr, $random:expr) => {
+    ($size:expr, $alphabet:expr, $random:expr) => {
         $crate::format($random, $alphabet, $size)
     };
 }
@@ -239,6 +239,13 @@ mod test_macros {
         let id: String = nanoid!(4, &alphabet::SAFE, rngs::default);
 
         assert_eq!(id.len(), 4);
+    }
+
+    #[test]
+    fn simple_expression() {
+        let id: String = nanoid!(42 / 2);
+
+        assert_eq!(id.len(), 21);
     }
 }
 
