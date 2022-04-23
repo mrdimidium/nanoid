@@ -19,7 +19,11 @@ travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }
 
 [dependencies]
 rand = { version = "0.8", features = ["small_rng"] }
+smartstring = { version = "1.0.1", optional = true }
 
 [dev-dependencies]
 cargo-husky = { version = "1", default-features = false, features = ["prepush-hook", "precommit-hook", "postmerge-hook", "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt"] }
 doc-comment = "0.3"
+
+[features]
+default = []
