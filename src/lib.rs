@@ -124,6 +124,9 @@
     html_root_url = "https://docs.rs/nanoid"
 )]
 
+#[cfg(feature = "smartstring")]
+use smartstring::alias::String;
+
 pub mod alphabet;
 pub mod rngs;
 
@@ -139,7 +142,10 @@ pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> S
     // Assert that the masking does not truncate the alphabet. (See #9)
     debug_assert!(alphabet.len() <= mask + 1);
 
+    #[cfg(not(feature = "smartstring"))]
     let mut id = String::with_capacity(size);
+    #[cfg(feature = "smartstring")]
+    let mut id = String::new();
 
     loop {
         let bytes = random(step);
