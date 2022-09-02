@@ -130,7 +130,7 @@ use smartstring::alias::String;
 pub mod alphabet;
 pub mod rngs;
 
-pub fn format(random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) -> String {
+pub fn format<F: Fn(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize) -> String {
     assert!(
         alphabet.len() <= u8::max_value() as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
@@ -245,6 +245,16 @@ mod test_macros {
         let id: String = nanoid!(4, &alphabet::SAFE, rngs::default);
 
         assert_eq!(id.len(), 4);
+    }
+
+    #[test]
+    fn closure() {
+        let uuid = "8936ad0c-9443-4007-9430-e223c64d4629";
+
+        let id1 = nanoid!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+        let id2 = nanoid!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+
+        assert_eq!(id1, id2);
     }
 
     #[test]
