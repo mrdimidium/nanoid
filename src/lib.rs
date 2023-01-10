@@ -46,7 +46,7 @@
 //! use nanoid::nanoid;
 //!
 //! fn main() {
-//!    let id = nanoid!(10); //=> "IRFa~VaY2b"
+//!    let id = nanoid!(10); //=> "IRFa-VaY2b"
 //! }
 //! ```
 //!
