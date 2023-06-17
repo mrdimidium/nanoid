@@ -1,25 +1,55 @@
-name: Build and test
+name: Build and tests
 
 on:
   push:
-    branches: [ 'main', 'v0.[0-9]+' ]
+    branches: [ main, 'v0.[0-9]+' ]
   pull_request:
-    branches: [ 'main', 'v0.[0-9]+' ]
+    branches: [ main, 'v0.[0-9]+' ]
 
 permissions:
   contents: read
 
-jobs:
-  build_and_test:
-    name: Build and test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
+env:
+  CARGO_TERM_COLOR: always
 
-      - run: 'cargo build  --verbose --release'
-      - run: 'cargo clippy --verbose --release -- -D warnings'
-      - run: 'cargo fmt    --verbose --all     -- --verbose --check'
-      - run: 'cargo test   --verbose --release'
+jobs:
+  tests:
+    name: "Tests: ${{ matrix.os }} / ${{ matrix.rust_target }}@${{ matrix.channel }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        channel: [stable, beta, nightly]
+        rust_target: [x86_64-gnu, x86_64-msvc, x86_64-apple-darwin]
+        exclude:
+        - os: macos-latest
+          rust_target: x86_64-gnu
+        - os: macos-latest
+          rust_target: x86_64-msvc
+        - os: ubuntu-latest
+          rust_target: x86_64-msvc
+        - os: ubuntu-latest
+          rust_target: x86_64-apple-darwin
+        - os: windows-latest
+          rust_target: x86_64-apple-darwin
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install toolchain
+      run: rustup update --force-non-host ${{ matrix.channel }}-${{ matrix.rust_target }} && rustup default ${{ matrix.channel }}-${{ matrix.rust_target }}
+
+    - name: Install cargo-hack
+      run: cargo install cargo-hack
+
+    - name: Each version feature
+      run: cargo hack test --lib --each-feature
+
+    - name: All features
+      run: cargo hack test --lib --all-features
+
+    - name: Docs
+      run: cargo test --all-features --doc
+
+    - name: Examples
+      run: cargo test --all-features --examples
