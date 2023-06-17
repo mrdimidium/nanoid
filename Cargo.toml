@@ -12,9 +12,6 @@ keywords = ["uuid", "random", "id", "url"]
 include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
 edition = "2018"
 
-[badges]
-maintenance = { status = "actively-developed" }
-
 [dependencies]
 rand = { version = "0.8", features = ["small_rng"] }
 smartstring = { version = "1.0.1", optional = true }
