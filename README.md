@@ -1,7 +1,7 @@
 # Nano ID
 
 [![Package version](https://img.shields.io/crates/v/nanoid.svg)](https://crates.io/crates/nanoid)
-[![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/nikolay-govorov/nanoid/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/nikolay-govorov/nanoid/blob/main/LICENSE)
 
 A tiny, secure, URL-friendly, unique string ID generator for Rust
 

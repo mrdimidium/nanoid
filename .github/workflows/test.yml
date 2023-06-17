@@ -1,0 +1,25 @@
+name: Build and test
+
+on:
+  push:
+    branches: [ 'main', 'v0.[0-9]+' ]
+  pull_request:
+    branches: [ 'main', 'v0.[0-9]+' ]
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - run: 'cargo build  --verbose --release'
+      - run: 'cargo clippy --verbose --release -- -D warnings'
+      - run: 'cargo fmt    --verbose --all     -- --verbose --check'
+      - run: 'cargo test   --verbose --release'
