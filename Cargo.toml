@@ -1,7 +1,7 @@
 [package]
 name = "nanoid"
 version = "0.4.0"
-authors = ["Nikolay Govorov <nikolay_govorov@bk.ru>"]
+authors = ["Nikolay Govorov <me@govorov.online>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/nikolay-govorov/nanoid.git"
