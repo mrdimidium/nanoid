@@ -2,9 +2,6 @@
 
 [![Package version](https://img.shields.io/crates/v/nanoid.svg)](https://crates.io/crates/nanoid)
 [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/nikolay-govorov/nanoid/blob/master/LICENSE)
-[![Travis build status ](https://travis-ci.org/nikolay-govorov/nanoid.svg?branch=master)](https://travis-ci.org/nikolay-govorov/nanoid)
-[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/nikolay-govorov/nanoid?svg=true&amp;branch=master)](https://ci.appveyor.com/project/nikolay-govorov/nanoid)
-![Maintenance intention for this crate](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
 A tiny, secure, URL-friendly, unique string ID generator for Rust
 

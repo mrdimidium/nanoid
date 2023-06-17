@@ -14,8 +14,6 @@ edition = "2018"
 
 [badges]
 maintenance = { status = "actively-developed" }
-appveyor = { repository = "nikolay-govorov/nanoid", branch = "master", service = "github" }
-travis-ci = { repository = "nikolay-govorov/nanoid", branch = "master" }
 
 [dependencies]
 rand = { version = "0.8", features = ["small_rng"] }
