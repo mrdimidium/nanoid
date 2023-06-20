@@ -136,16 +136,26 @@ pub fn format<F: Fn(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
+    #[cfg(not(feature = "smartstring"))]
+    let mut id = String::with_capacity(size);
+    #[cfg(feature = "smartstring")]
+    let mut id = String::new();
+
+    if alphabet.len().is_power_of_two() {
+        fast_impl(&mut id, random, alphabet, size);
+    } else {
+        generic_impl(&mut id, random, alphabet, size);
+    }
+    id
+}
+
+/// Generic implementation that works for any alphabet with up to 256 characters
+fn generic_impl(id: &mut String, random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) {
     let mask = alphabet.len().next_power_of_two() - 1;
     let step: usize = 8 * size / 5;
 
     // Assert that the masking does not truncate the alphabet. (See #9)
     debug_assert!(alphabet.len() <= mask + 1);
-
-    #[cfg(not(feature = "smartstring"))]
-    let mut id = String::with_capacity(size);
-    #[cfg(feature = "smartstring")]
-    let mut id = String::new();
 
     loop {
         let bytes = random(step);
@@ -157,10 +167,30 @@ pub fn format<F: Fn(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize
                 id.push(alphabet[byte]);
 
                 if id.len() == size {
-                    return id;
+                    return;
                 }
             }
         }
+    }
+}
+
+/// Faster implementatin that assumes the size of the alphabet is a power of 2
+///
+/// This allow us to skip some checks and branches that are necessary in the general case.
+fn fast_impl(id: &mut String, random: fn(usize) -> Vec<u8>, alphabet: &[char], size: usize) {
+    debug_assert!(alphabet.len().is_power_of_two());
+
+    // The size of the alphabet exactly matches the number of bits of  alphabet.len() - 1
+    let mask = alphabet.len() - 1;
+
+    // All ones in the mask should be at the end
+    debug_assert!(mask.trailing_ones() == mask.count_ones());
+    // Since we never have to discard values, we can just allocate the random bytes once
+    let bytes = random(size);
+
+    for &byte in &bytes {
+        let byte = byte as usize & mask;
+        id.push(alphabet[byte]);
     }
 }
 
