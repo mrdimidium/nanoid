@@ -14,9 +14,8 @@
 //! ```rust
 //! use nanoid::nanoid;
 //!
-//! fn main() {
-//!    let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
-//! }
+//! let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
+//! # assert_eq!(id.len(), 21);
 //! ```
 //!
 //! ## Usage
@@ -29,9 +28,8 @@
 //! ```rust
 //! use nanoid::nanoid;
 //!
-//! fn main() {
-//!    let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
-//! }
+//! let id = nanoid!(); //=> "Yo1Tr9F3iF-LFHX9i9GvA"
+//! # assert_eq!(id.len(), 21);
 //! ```
 //!
 //! Symbols `-,.()` are not encoded in the URL. If used at the end of a link
@@ -45,9 +43,8 @@
 //! ```rust
 //! use nanoid::nanoid;
 //!
-//! fn main() {
-//!    let id = nanoid!(10); //=> "IRFa-VaY2b"
-//! }
+//! let id = nanoid!(10); //=> "IRFa-VaY2b"
+//! # assert_eq!(id.len(), 10);
 //! ```
 //!
 //! ### Custom Alphabet or Length
@@ -58,13 +55,12 @@
 //! ```rust
 //! use nanoid::nanoid;
 //!
-//! fn main() {
-//!     let alphabet: [char; 16] = [
-//!         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
-//!     ];
+//! let alphabet: [char; 16] = [
+//!     '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'
+//! ];
 //!
-//!    let id = nanoid!(10, &alphabet); //=> "4f90d13a42"
-//! }
+//! let id = nanoid!(10, &alphabet); //=> "4f90d13a42"
+//! # assert_eq!(id.len(), 10);
 //! ```
 //!
 //! Alphabet must contain 256 symbols or less.
@@ -118,6 +114,34 @@
 //! }
 //! ```
 //!
+//! ### Seeded Random Generator
+//!
+//! You can use a seeded random generator for reproducible IDs.
+//! This is useful for testing or when you need deterministic output.
+//!
+//! ```rust
+//! use nanoid::nanoid;
+//! use rand::{rngs::StdRng, Rng, SeedableRng};
+//!
+//! let mut rng = StdRng::seed_from_u64(42);
+//!
+//! let id = nanoid!(10, &nanoid::alphabet::SAFE, |size| {
+//!     let mut bytes = vec![0u8; size];
+//!     rng.fill(&mut bytes[..]);
+//!     bytes
+//! });
+//!
+//! # assert_eq!(id.len(), 10);
+//! println!("{}", id); //=> "wyBwxRa4Xf"
+//! ```
+//!
+//! The random generator accepts `Fn` and `FnMut` closures, allowing you to use
+//! stateful random generators. This enables use cases like:
+//!
+//! - Seeded RNGs for reproducible IDs
+//! - Custom stateful generators
+//! - Integration with external random sources
+//!
 
 #![doc(
     html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
@@ -131,7 +155,7 @@ use smartstring::alias::String;
 pub mod alphabet;
 pub mod rngs;
 
-pub fn format<F: Fn(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize) -> String {
+pub fn format<F: FnMut(usize) -> Vec<u8>>(mut random: F, alphabet: &[char], size: usize) -> String {
     assert!(
         alphabet.len() <= u8::MAX as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
@@ -263,6 +287,24 @@ mod test_macros {
         let id: String = nanoid!(42 / 2);
 
         assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn fnmut_closure() {
+        // Test FnMut closures with mutable state
+        let mut counter = 0u8;
+
+        let id = nanoid!(10, &alphabet::SAFE, |size| {
+            let mut bytes = vec![0u8; size];
+            for byte in &mut bytes {
+                *byte = counter;
+                counter = counter.wrapping_add(1);
+            }
+            bytes
+        });
+
+        assert_eq!(id.len(), 10);
+        assert!(counter > 0); // Verify the closure actually mutated the counter
     }
 }
 
