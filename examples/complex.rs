@@ -1,12 +1,12 @@
 use nanoid::nanoid;
 
-use rand::distributions::Standard;
-use rand::{thread_rng, Rng};
+use rand::distr::StandardUniform;
+use rand::Rng;
 
 fn random(size: usize) -> Vec<u8> {
-    let rng = thread_rng();
+    let rng = rand::rng();
 
-    rng.sample_iter(&Standard).take(size).collect()
+    rng.sample_iter(&StandardUniform).take(size).collect()
 }
 
 fn main() {

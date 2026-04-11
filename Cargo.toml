@@ -13,7 +13,7 @@ include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
 edition = "2018"
 
 [dependencies]
-rand = { version = "0.8", features = ["small_rng"] }
+rand = "0.9"
 smartstring = { version = "1.0.1", optional = true }
 
 [dev-dependencies]

@@ -1,10 +1,10 @@
 use rand::{
     rngs::{SmallRng, StdRng},
-    thread_rng, Rng, SeedableRng,
+    Rng, SeedableRng,
 };
 
 pub fn default(size: usize) -> Vec<u8> {
-    let mut rng = StdRng::from_entropy();
+    let mut rng = StdRng::from_os_rng();
     let mut result: Vec<u8> = vec![0; size];
 
     rng.fill(&mut result[..]);
@@ -25,7 +25,7 @@ mod test_default {
 }
 
 pub fn non_secure(size: usize) -> Vec<u8> {
-    let mut rng = SmallRng::from_entropy();
+    let mut rng = SmallRng::from_os_rng();
     let mut result = vec![0u8; size];
 
     rng.fill(&mut result[..]);
@@ -47,7 +47,7 @@ mod test_non_secure {
 
 /// Use the thread local Rng
 pub fn thread_local(size: usize) -> Vec<u8> {
-    let mut rng = thread_rng();
+    let mut rng = rand::rng();
     let mut result = vec![0u8; size];
 
     rng.fill(&mut result[..]);
