@@ -5,6 +5,8 @@ on:
     branches: [ main, 'v0.[0-9]+' ]
   pull_request:
     branches: [ main, 'v0.[0-9]+' ]
+  schedule:
+     - cron: "0 2 * * *"
 
 permissions:
   contents: read
@@ -13,34 +15,53 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: -D warnings
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Install toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Verify lockfile
+      run: cargo check --locked
+
+    - name: Check formatting
+      run: cargo fmt --all -- --check
+
+    - name: Clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+
+    - name: Build docs
+      run: cargo doc --no-deps --all-features
+
   tests:
-    name: "Tests: ${{ matrix.os }} / ${{ matrix.rust_target }}@${{ matrix.channel }}"
+    name: "Tests: ${{ matrix.os }} @ ${{ matrix.channel }}"
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         channel: [stable, beta, nightly]
-        rust_target: [x86_64-gnu, x86_64-msvc, x86_64-apple-darwin]
-        exclude:
-        - os: macos-latest
-          rust_target: x86_64-gnu
-        - os: macos-latest
-          rust_target: x86_64-msvc
-        - os: ubuntu-latest
-          rust_target: x86_64-msvc
-        - os: ubuntu-latest
-          rust_target: x86_64-apple-darwin
-        - os: windows-latest
-          rust_target: x86_64-apple-darwin
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
     - name: Install toolchain
-      run: rustup update --force-non-host ${{ matrix.channel }}-${{ matrix.rust_target }} && rustup default ${{ matrix.channel }}-${{ matrix.rust_target }}
+      uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
+      with:
+        toolchain: ${{ matrix.channel }}
 
-    - name: Install cargo-hack
-      run: cargo install cargo-hack
+    - uses: taiki-e/install-action@0abfcd587b70a713fdaa7fb502c885e2112acb15 # v2.75.7
+      with:
+        tool: cargo-hack
 
     - name: Each version feature
       run: cargo hack test --lib --each-feature

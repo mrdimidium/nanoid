@@ -1,15 +1,14 @@
-#![feature(test)]
+use criterion::{criterion_group, criterion_main, Criterion};
 
-extern crate test;
-
-use test::Bencher;
-
-#[bench]
-fn default(b: &mut Bencher) {
-    b.iter(|| nanoid::rngs::default(21));
+fn default(c: &mut Criterion) {
+    c.bench_function("rngs::default", |b| b.iter(|| nanoid::rngs::default(21)));
 }
 
-#[bench]
-fn non_secure(b: &mut Bencher) {
-    b.iter(|| nanoid::rngs::non_secure(21));
+fn non_secure(c: &mut Criterion) {
+    c.bench_function("rngs::non_secure", |b| {
+        b.iter(|| nanoid::rngs::non_secure(21))
+    });
 }
+
+criterion_group!(benches, default, non_secure);
+criterion_main!(benches);

@@ -4,9 +4,9 @@ version = "0.4.0"
 authors = ["Nikolay Govorov <me@govorov.online>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/nikolay-govorov/nanoid.git"
+repository = "https://github.com/mrdimidium/nanoid.git"
 documentation = "https://docs.rs/nanoid"
-homepage = "https://github.com/nikolay-govorov/nanoid"
+homepage = "https://github.com/mrdimidium/nanoid"
 description = "A tiny, secure, URL-friendly, unique string ID generator for Rust."
 keywords = ["uuid", "random", "id", "url"]
 include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
@@ -18,7 +18,12 @@ smartstring = { version = "1.0.1", optional = true }
 
 [dev-dependencies]
 cargo-husky = { version = "1", default-features = false, features = ["prepush-hook", "precommit-hook", "postmerge-hook", "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt"] }
+criterion = "0.8"
 doc-comment = "0.3"
 
 [features]
 default = []
+
+[[bench]]
+name = "rngs"
+harness = false

@@ -132,7 +132,7 @@ pub mod rngs;
 
 pub fn format<F: Fn(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize) -> String {
     assert!(
-        alphabet.len() <= u8::max_value() as usize,
+        alphabet.len() <= u8::MAX as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
