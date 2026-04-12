@@ -1,8 +1,8 @@
 # Nano ID
 
 [![Package version](https://img.shields.io/crates/v/nanoid.svg)](https://crates.io/crates/nanoid)
-[![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/nikolay-govorov/nanoid/blob/main/LICENSE)
-[![Build](https://github.com/nikolay-govorov/nanoid/actions/workflows/test.yml/badge.svg)](https://github.com/nikolay-govorov/nanoid/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/mrdimidium/nanoid/blob/main/LICENSE)
+[![Build](https://github.com/mrdimidium/nanoid/actions/workflows/test.yml/badge.svg)](https://github.com/mrdimidium/nanoid/actions/workflows/test.yml)
 
 A tiny, secure, URL-friendly, unique string ID generator for Rust
 
@@ -80,8 +80,9 @@ Otherwise, the generator will not be secure.
 
 ### Custom Random Bytes Generator
 
-You can replace the default safe random generator using the `complex` module.
-For instance, to use a seed-based generator.
+You can replace the default safe random generator by passing your own
+function as the third argument to `nanoid!()`. For instance, to use a
+seed-based generator.
 
 ```rust
 use nanoid::nanoid;
@@ -106,8 +107,8 @@ fn main() {
 `random` function must accept the array size and return an vector
 with random numbers.
 
-If you want to use the same URL-friendly symbols with `format`,
-you can get the default alphabet from the `url` module:
+If you want to use the same URL-friendly symbols with a custom random
+source, the default alphabet is exposed as `nanoid::alphabet::SAFE`:
 
 ```rust
 use nanoid::nanoid;

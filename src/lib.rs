@@ -52,8 +52,8 @@
 //!
 //! ### Custom Alphabet or Length
 //!
-//! If you want to change the ID's alphabet or length
-//! you can use the low-level `custom` module.
+//! If you want to change the ID's alphabet or length, you can pass
+//! a custom alphabet to the `nanoid!()` macro as the second parameter.
 //!
 //! ```rust
 //! use nanoid::nanoid;
@@ -72,8 +72,9 @@
 //!
 //! ### Custom Random Bytes Generator
 //!
-//! You can replace the default safe random generator using the `complex` module.
-//! For instance, to use a seed-based generator.
+//! You can replace the default safe random generator by passing your own
+//! function as the third argument to `nanoid!()`. For instance, to use a
+//! seed-based generator.
 //!
 //! ```rust
 //! use nanoid::nanoid;
@@ -100,8 +101,8 @@
 //! `random` function must accept the array size and return an vector
 //! with random numbers.
 //!
-//! If you want to use the same URL-friendly symbols with `format`,
-//! you can get the default alphabet from the `url` module:
+//! If you want to use the same URL-friendly symbols with a custom random
+//! source, the default alphabet is exposed as `nanoid::alphabet::SAFE`:
 //!
 //! ```rust
 //! use nanoid::nanoid;

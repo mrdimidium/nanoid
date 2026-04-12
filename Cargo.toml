@@ -17,7 +17,6 @@ rand = "0.9"
 smartstring = { version = "1.0.1", optional = true }
 
 [dev-dependencies]
-cargo-husky = { version = "1", default-features = false, features = ["prepush-hook", "precommit-hook", "postmerge-hook", "run-cargo-test", "run-cargo-check", "run-cargo-clippy", "run-cargo-fmt"] }
 criterion = "0.8"
 doc-comment = "0.3"
 
