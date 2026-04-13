@@ -155,22 +155,37 @@ use smartstring::alias::String;
 pub mod alphabet;
 pub mod rngs;
 
-pub fn format<F: FnMut(usize) -> Vec<u8>>(mut random: F, alphabet: &[char], size: usize) -> String {
+pub fn format<F: FnMut(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize) -> String {
     assert!(
         alphabet.len() <= u8::MAX as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
+    #[cfg(not(feature = "smartstring"))]
+    let mut id = String::with_capacity(size);
+    #[cfg(feature = "smartstring")]
+    let mut id = String::new();
+
+    if alphabet.len().is_power_of_two() {
+        fast_impl(&mut id, random, alphabet, size);
+    } else {
+        generic_impl(&mut id, random, alphabet, size);
+    }
+    id
+}
+
+/// Generic implementation that works for any alphabet with up to 256 characters.
+fn generic_impl<F: FnMut(usize) -> Vec<u8>>(
+    id: &mut String,
+    mut random: F,
+    alphabet: &[char],
+    size: usize,
+) {
     let mask = alphabet.len().next_power_of_two() - 1;
     let step: usize = 8 * size / 5;
 
     // Assert that the masking does not truncate the alphabet. (See #9)
     debug_assert!(alphabet.len() <= mask + 1);
-
-    #[cfg(not(feature = "smartstring"))]
-    let mut id = String::with_capacity(size);
-    #[cfg(feature = "smartstring")]
-    let mut id = String::new();
 
     loop {
         let bytes = random(step);
@@ -182,10 +197,32 @@ pub fn format<F: FnMut(usize) -> Vec<u8>>(mut random: F, alphabet: &[char], size
                 id.push(alphabet[byte]);
 
                 if id.len() == size {
-                    return id;
+                    return;
                 }
             }
         }
+    }
+}
+
+/// Faster implementation that assumes the size of the alphabet is a power of 2.
+///
+/// This allows us to skip some checks and branches that are necessary in the general case.
+fn fast_impl<F: FnMut(usize) -> Vec<u8>>(
+    id: &mut String,
+    mut random: F,
+    alphabet: &[char],
+    size: usize,
+) {
+    debug_assert!(alphabet.len().is_power_of_two());
+
+    let mask = alphabet.len() - 1;
+
+    // Since we never discard values, we can request the exact number of bytes up front.
+    let bytes = random(size);
+
+    for &byte in &bytes {
+        let byte = byte as usize & mask;
+        id.push(alphabet[byte]);
     }
 }
 
@@ -214,6 +251,18 @@ mod test_format {
         let id: String = nanoid!(42, &alphabet::SAFE[0..62]);
 
         assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn power_of_two_uses_fast_path() {
+        fn random(size: usize) -> Vec<u8> {
+            (0..size as u8).collect()
+        }
+
+        let alphabet: [char; 4] = ['a', 'b', 'c', 'd'];
+        // With a power-of-two alphabet, every byte maps directly via `byte & mask`,
+        // so the output is fully determined by the input bytes.
+        assert_eq!(format(random, &alphabet, 8), "abcdabcd");
     }
 }
 
