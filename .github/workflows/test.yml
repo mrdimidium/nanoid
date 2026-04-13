@@ -2,9 +2,10 @@ name: Build and tests
 
 on:
   push:
-    branches: [ main, 'v0.[0-9]+' ]
+    branches: [ main, master, 'v0.[0-9]+' ]
+
   pull_request:
-    branches: [ main, 'v0.[0-9]+' ]
+
   schedule:
      - cron: "0 2 * * *"
 
