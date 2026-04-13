@@ -26,7 +26,7 @@ and has a similar number of unique IDs in just 21 symbols instead of 36.
 
 ```toml
 [dependencies]
-nanoid = "0.4.0"
+nanoid = "0.5.0"
 ```
 
 ### Simple
@@ -153,16 +153,43 @@ stateful random generators. This enables use cases like:
 - Custom stateful generators
 - Integration with external random sources
 
-## Other Programming Languages
 
-* [JS](https://github.com/ai/nanoid)
-* [C#](https://github.com/codeyu/nanoid-net)
-* [Crystal](https://github.com/mamantoha/nanoid.cr)
-* [Go](https://github.com/matoous/go-nanoid)
-* [Elixir](https://github.com/railsmechanic/nanoid)
-* [Haskell](https://github.com/4e6/nanoid-hs)
-* [Java](https://github.com/aventrix/jnanoid)
-* [Nim](https://github.com/icyphox/nanoid.nim)
-* [PHP](https://github.com/hidehalo/nanoid-php)
-* [Python](https://github.com/puyuan/py-nanoid)
-* [Ruby](https://github.com/radeno/nanoid.rb)
+### Other Programming Languages
+
+Reference implementation on [JavaScript](https://github.com/ai/nanoid).
+
+Nano ID was ported to many languages. You can use these ports to have
+the same ID generator on the client and server side.
+
+- [C](https://github.com/lukateras/nanoid.h)
+- [C#](https://github.com/codeyu/nanoid-net)
+- [C++](https://github.com/mcmikecreations/nanoid_cpp)
+- [Clojure and ClojureScript](https://github.com/zelark/nano-id)
+- [ColdFusion/CFML](https://github.com/JamoCA/cfml-nanoid)
+- [Crystal](https://github.com/mamantoha/nanoid.cr)
+- [Dart & Flutter](https://github.com/pd4d10/nanoid-dart)
+- [Elixir](https://github.com/railsmechanic/nanoid)
+- [Gleam](https://github.com/0xca551e/glanoid)
+- [Go](https://github.com/matoous/go-nanoid)
+- [Haskell](https://github.com/MichelBoucey/NanoID)
+- [Haxe](https://github.com/flashultra/uuid)
+- [Janet](https://sr.ht/~statianzo/janet-nanoid/)
+- [Java](https://github.com/wosherco/jnanoid-enhanced)
+- [Kotlin](https://github.com/viascom/nanoid-kotlin)
+- [MySQL/MariaDB](https://github.com/viascom/nanoid-mysql-mariadb)
+- [Nim](https://github.com/icyphox/nanoid.nim)
+- [OCaml](https://github.com/routineco/ocaml-nanoid)
+- [Perl](https://github.com/tkzwtks/Nanoid-perl)
+- [PHP](https://github.com/hidehalo/nanoid-php)
+- Python [native](https://github.com/puyuan/py-nanoid) implementation
+  with [dictionaries](https://pypi.org/project/nanoid-dictionary)
+  and [fast](https://github.com/oliverlambson/fastnanoid) implementation (written in Rust)
+- Postgres [Extension](https://github.com/spa5k/uids-postgres)
+  and [Native Function](https://github.com/viascom/nanoid-postgres)
+- [R](https://github.com/hrbrmstr/nanoid) (with dictionaries)
+- [Ruby](https://github.com/radeno/nanoid.rb)
+- [Rust](https://github.com/nikolay-govorov/nanoid)
+- [Swift](https://github.com/ShivaHuang/swift-nanoid)
+- [Unison](https://share.unison-lang.org/latest/namespaces/hojberg/nanoid)
+- [V](https://github.com/invipal/nanoid)
+- [Zig](https://github.com/SasLuca/zig-nanoid)
