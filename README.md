@@ -124,6 +124,35 @@ fn main() {
 }
 ```
 
+### Seeded Random Generator
+
+You can use a seeded random generator for reproducible IDs.
+This is useful for testing or when you need deterministic output.
+
+```rust
+use nanoid::nanoid;
+use rand::{rngs::StdRng, Rng, SeedableRng};
+
+fn main() {
+    let mut rng = StdRng::seed_from_u64(42);
+
+    let id = nanoid!(10, &nanoid::alphabet::SAFE, |size| {
+        let mut bytes = vec![0u8; size];
+        rng.fill(&mut bytes[..]);
+        bytes
+    });
+
+    println!("{}", id); //=> "wyBwxRa4Xf"
+}
+```
+
+The random generator accepts `Fn` and `FnMut` closures, allowing you to use
+stateful random generators. This enables use cases like:
+
+- Seeded RNGs for reproducible IDs
+- Custom stateful generators
+- Integration with external random sources
+
 ## Other Programming Languages
 
 * [JS](https://github.com/ai/nanoid)
