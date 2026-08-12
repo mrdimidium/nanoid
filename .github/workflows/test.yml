@@ -66,21 +66,20 @@ jobs:
       with:
         toolchain: ${{ matrix.channel }}
 
-    - uses: taiki-e/install-action@0abfcd587b70a713fdaa7fb502c885e2112acb15 # v2.75.7
-      with:
-        tool: cargo-hack
-
     - name: Each version feature
-      run: cargo hack test --lib --each-feature
+      run: |
+        cargo test --lib
+        cargo test --lib --no-default-features --features compact_str
+        cargo test --lib --no-default-features --features smartstring
 
     - name: Docs
       run: |
         cargo test --doc
-        cargo test --no-default-features --features compact_str --doc
-        cargo test --no-default-features --features smartstring --doc
+        cargo test --doc --no-default-features --features compact_str
+        cargo test --doc --no-default-features --features smartstring
 
     - name: Examples
       run: |
         cargo test --examples
-        cargo test --no-default-features --features compact_str --examples
-        cargo test --no-default-features --features smartstring --examples
+        cargo test --examples --no-default-features --features compact_str
+        cargo test --examples --no-default-features --features smartstring

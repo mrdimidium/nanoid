@@ -1,9 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 0.5.1
 
-* Add optional `compact_str` feature; `smartstring` remains supported for now and will be removed in a future release. The features are mutually exclusive (#29).
+* Add optional `compact_str` feature; `smartstring` remains supported for now and will be removed in a future release. The features are mutually exclusive (#43).
 
 ## 0.5.0
 * Bump `rand` to 0.9
