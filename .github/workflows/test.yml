@@ -38,10 +38,16 @@ jobs:
       run: cargo fmt --all -- --check
 
     - name: Clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings
+      run: |
+        cargo clippy --all-targets -- -D warnings
+        cargo clippy --all-targets --no-default-features --features compact_str -- -D warnings
+        cargo clippy --all-targets --no-default-features --features smartstring -- -D warnings
 
     - name: Build docs
-      run: cargo doc --no-deps --all-features
+      run: |
+        cargo doc --no-deps
+        cargo doc --no-deps --no-default-features --features compact_str
+        cargo doc --no-deps --no-default-features --features smartstring
 
   tests:
     name: "Tests: ${{ matrix.os }} @ ${{ matrix.channel }}"
@@ -67,11 +73,14 @@ jobs:
     - name: Each version feature
       run: cargo hack test --lib --each-feature
 
-    - name: All features
-      run: cargo hack test --lib --all-features
-
     - name: Docs
-      run: cargo test --all-features --doc
+      run: |
+        cargo test --doc
+        cargo test --no-default-features --features compact_str --doc
+        cargo test --no-default-features --features smartstring --doc
 
     - name: Examples
-      run: cargo test --all-features --examples
+      run: |
+        cargo test --examples
+        cargo test --no-default-features --features compact_str --examples
+        cargo test --no-default-features --features smartstring --examples

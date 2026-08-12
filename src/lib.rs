@@ -142,6 +142,16 @@
 //! - Custom stateful generators
 //! - Integration with external random sources
 //!
+//! ### Small String Optimization
+//!
+//! By default, `format` and the `nanoid!` macro return a
+//! `std::string::String`. Enable the `compact_str` feature to get
+//! small-string-optimized output backed by
+//! [`compact_str::CompactString`](https://docs.rs/compact_str/), or the
+//! `smartstring` feature for output backed by
+//! [`smartstring::alias::String`](https://docs.rs/smartstring/). The two
+//! features are mutually exclusive; `smartstring` will be removed in a future
+//! major release.
 
 #![doc(
     html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
@@ -149,8 +159,16 @@
     html_root_url = "https://docs.rs/nanoid"
 )]
 
+#[cfg(feature = "compact_str")]
+use compact_str::CompactString as String;
+
 #[cfg(feature = "smartstring")]
 use smartstring::alias::String;
+
+#[cfg(all(feature = "compact_str", feature = "smartstring"))]
+compile_error!(
+    "The `compact_str` and `smartstring` features are mutually exclusive. Enable only one."
+);
 
 pub mod alphabet;
 pub mod rngs;
@@ -161,10 +179,11 @@ pub fn format<F: FnMut(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: us
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
 
-    #[cfg(not(feature = "smartstring"))]
-    let mut id = String::with_capacity(size);
     #[cfg(feature = "smartstring")]
     let mut id = String::new();
+
+    #[cfg(not(feature = "smartstring"))]
+    let mut id = String::with_capacity(size);
 
     if alphabet.len().is_power_of_two() {
         fast_impl(&mut id, random, alphabet, size);
