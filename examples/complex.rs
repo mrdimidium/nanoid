@@ -1,7 +1,7 @@
 use nanoid::nanoid;
 
 use rand::distr::StandardUniform;
-use rand::Rng;
+use rand::RngExt;
 
 fn random(size: usize) -> Vec<u8> {
     let rng = rand::rng();

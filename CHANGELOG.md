@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.0
+
+* Bump `rand` to 0.10. Rust 1.85 or later is now required by `rand`.
+
 ## 0.5.1
 
 * Add optional `compact_str` feature; `smartstring` remains supported for now and will be removed in a future release. The features are mutually exclusive (#43).
