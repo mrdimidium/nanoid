@@ -131,7 +131,7 @@ This is useful for testing or when you need deterministic output.
 
 ```rust
 use nanoid::nanoid;
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{rngs::StdRng, RngExt, SeedableRng};
 
 fn main() {
     let mut rng = StdRng::seed_from_u64(42);

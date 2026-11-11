@@ -13,7 +13,7 @@ include = ["src/**/*", "Cargo.toml", "LICENSE", "README.md", "CHANGELOG.md"]
 edition = "2018"
 
 [dependencies]
-rand = "0.9"
+rand = "0.10"
 compact_str = { version = "0.10.0", optional = true }
 smartstring = { version = "1.0.1", optional = true }
 

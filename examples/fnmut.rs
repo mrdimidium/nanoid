@@ -1,5 +1,5 @@
 use nanoid::nanoid;
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{rngs::StdRng, RngExt, SeedableRng};
 
 fn main() {
     // Example 1: Using a seeded RNG (stateful, requires FnMut)
