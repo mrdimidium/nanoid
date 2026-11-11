@@ -296,6 +296,104 @@ mod test_format {
     }
 }
 
+#[cfg(all(test, feature = "compact_str"))]
+mod test_format_compact {
+    use super::*;
+
+    #[test]
+    fn generates_random_string() {
+        fn random(size: usize) -> Vec<u8> {
+            [2, 255, 0, 1].iter().cloned().cycle().take(size).collect()
+        }
+
+        let id: compact_str::CompactString = format_compact(random, &['a', 'b', 'c'], 4);
+
+        assert_eq!(id.as_str(), "cabc");
+    }
+
+    #[test]
+    #[should_panic]
+    fn bad_alphabet() {
+        let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
+        nanoid_compact!(21, &alphabet);
+    }
+
+    #[test]
+    fn non_power_2() {
+        let id: compact_str::CompactString = nanoid_compact!(42, &alphabet::SAFE[0..62]);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn power_of_two_uses_fast_path() {
+        fn random(size: usize) -> Vec<u8> {
+            (0..size as u8).collect()
+        }
+
+        let alphabet: [char; 4] = ['a', 'b', 'c', 'd'];
+        // With a power-of-two alphabet, every byte maps directly via `byte & mask`,
+        // so the output is fully determined by the input bytes.
+        assert_eq!(format_compact(random, &alphabet, 8), "abcdabcd");
+    }
+
+    #[test]
+    fn generates_long_string() {
+        let id: compact_str::CompactString = format_compact(|size| vec![0; size], &['a', 'b'], 64);
+
+        assert_eq!(id.as_str(), "a".repeat(64));
+    }
+}
+
+#[cfg(all(test, feature = "smartstring"))]
+mod test_format_smart {
+    use super::*;
+
+    #[test]
+    fn generates_random_string() {
+        fn random(size: usize) -> Vec<u8> {
+            [2, 255, 0, 1].iter().cloned().cycle().take(size).collect()
+        }
+
+        let id: smartstring::alias::String = format_smart(random, &['a', 'b', 'c'], 4);
+
+        assert_eq!(id.as_str(), "cabc");
+    }
+
+    #[test]
+    #[should_panic]
+    fn bad_alphabet() {
+        let alphabet: Vec<char> = (0..32_u8).cycle().map(|i| i as char).take(1000).collect();
+        nanoid_smart!(21, &alphabet);
+    }
+
+    #[test]
+    fn non_power_2() {
+        let id: smartstring::alias::String = nanoid_smart!(42, &alphabet::SAFE[0..62]);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn power_of_two_uses_fast_path() {
+        fn random(size: usize) -> Vec<u8> {
+            (0..size as u8).collect()
+        }
+
+        let alphabet: [char; 4] = ['a', 'b', 'c', 'd'];
+        // With a power-of-two alphabet, every byte maps directly via `byte & mask`,
+        // so the output is fully determined by the input bytes.
+        assert_eq!(format_smart(random, &alphabet, 8), "abcdabcd");
+    }
+
+    #[test]
+    fn generates_long_string() {
+        let id: smartstring::alias::String = format_smart(|size| vec![0; size], &['a', 'b'], 64);
+
+        assert_eq!(id.as_str(), "a".repeat(64));
+    }
+}
+
 #[macro_export]
 macro_rules! nanoid {
     // simple
@@ -422,6 +520,142 @@ mod test_macros {
         let mut counter = 0u8;
 
         let id = nanoid!(10, &alphabet::SAFE, |size| {
+            let mut bytes = vec![0u8; size];
+            for byte in &mut bytes {
+                *byte = counter;
+                counter = counter.wrapping_add(1);
+            }
+            bytes
+        });
+
+        assert_eq!(id.len(), 10);
+        assert!(counter > 0); // Verify the closure actually mutated the counter
+    }
+}
+
+#[cfg(all(test, feature = "compact_str"))]
+mod test_macros_compact {
+    use super::*;
+
+    #[test]
+    fn simple() {
+        let id: compact_str::CompactString = nanoid_compact!();
+
+        assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn generate() {
+        let id: compact_str::CompactString = nanoid_compact!(42);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn custom() {
+        let id: compact_str::CompactString = nanoid_compact!(42, &alphabet::SAFE);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn complex() {
+        let id: compact_str::CompactString = nanoid_compact!(4, &alphabet::SAFE, rngs::default);
+
+        assert_eq!(id.len(), 4);
+    }
+
+    #[test]
+    fn closure() {
+        let uuid = "8936ad0c-9443-4007-9430-e223c64d4629";
+
+        let id1 = nanoid_compact!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+        let id2 = nanoid_compact!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+
+        assert_eq!(id1, id2);
+    }
+
+    #[test]
+    fn simple_expression() {
+        let id: compact_str::CompactString = nanoid_compact!(42 / 2);
+
+        assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn fnmut_closure() {
+        // Test FnMut closures with mutable state
+        let mut counter = 0u8;
+
+        let id = nanoid_compact!(10, &alphabet::SAFE, |size| {
+            let mut bytes = vec![0u8; size];
+            for byte in &mut bytes {
+                *byte = counter;
+                counter = counter.wrapping_add(1);
+            }
+            bytes
+        });
+
+        assert_eq!(id.len(), 10);
+        assert!(counter > 0); // Verify the closure actually mutated the counter
+    }
+}
+
+#[cfg(all(test, feature = "smartstring"))]
+mod test_macros_smart {
+    use super::*;
+
+    #[test]
+    fn simple() {
+        let id: smartstring::alias::String = nanoid_smart!();
+
+        assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn generate() {
+        let id: smartstring::alias::String = nanoid_smart!(42);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn custom() {
+        let id: smartstring::alias::String = nanoid_smart!(42, &alphabet::SAFE);
+
+        assert_eq!(id.len(), 42);
+    }
+
+    #[test]
+    fn complex() {
+        let id: smartstring::alias::String = nanoid_smart!(4, &alphabet::SAFE, rngs::default);
+
+        assert_eq!(id.len(), 4);
+    }
+
+    #[test]
+    fn closure() {
+        let uuid = "8936ad0c-9443-4007-9430-e223c64d4629";
+
+        let id1 = nanoid_smart!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+        let id2 = nanoid_smart!(20, &alphabet::SAFE, |_| uuid.as_bytes().to_vec());
+
+        assert_eq!(id1, id2);
+    }
+
+    #[test]
+    fn simple_expression() {
+        let id: smartstring::alias::String = nanoid_smart!(42 / 2);
+
+        assert_eq!(id.len(), 21);
+    }
+
+    #[test]
+    fn fnmut_closure() {
+        // Test FnMut closures with mutable state
+        let mut counter = 0u8;
+
+        let id = nanoid_smart!(10, &alphabet::SAFE, |size| {
             let mut bytes = vec![0u8; size];
             for byte in &mut bytes {
                 *byte = counter;
