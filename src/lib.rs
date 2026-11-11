@@ -144,14 +144,10 @@
 //!
 //! ### Small String Optimization
 //!
-//! By default, `format` and the `nanoid!` macro return a
-//! `std::string::String`. Enable the `compact_str` feature to get
-//! small-string-optimized output backed by
-//! [`compact_str::CompactString`](https://docs.rs/compact_str/), or the
-//! `smartstring` feature for output backed by
-//! [`smartstring::alias::String`](https://docs.rs/smartstring/). The two
-//! features are mutually exclusive; `smartstring` will be removed in a future
-//! major release.
+//! `format` and `nanoid!` always return `std::string::String`.
+//! Enable `compact_str` to use `format_compact` and `nanoid_compact!`, or
+//! `smartstring` to use `format_smart` and `nanoid_smart!`. Both features
+//! can be enabled together without changing the existing API.
 
 #![doc(
     html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
@@ -159,31 +155,46 @@
     html_root_url = "https://docs.rs/nanoid"
 )]
 
-#[cfg(feature = "compact_str")]
-use compact_str::CompactString as String;
-
-#[cfg(feature = "smartstring")]
-use smartstring::alias::String;
-
-#[cfg(all(feature = "compact_str", feature = "smartstring"))]
-compile_error!(
-    "The `compact_str` and `smartstring` features are mutually exclusive. Enable only one."
-);
-
 pub mod alphabet;
 pub mod rngs;
 
 pub fn format<F: FnMut(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: usize) -> String {
+    format_impl(String::with_capacity(size), random, alphabet, size)
+}
+
+#[cfg(feature = "compact_str")]
+pub fn format_compact<F: FnMut(usize) -> Vec<u8>>(
+    random: F,
+    alphabet: &[char],
+    size: usize,
+) -> compact_str::CompactString {
+    format_impl(
+        compact_str::CompactString::with_capacity(size),
+        random,
+        alphabet,
+        size,
+    )
+}
+
+#[cfg(feature = "smartstring")]
+pub fn format_smart<F: FnMut(usize) -> Vec<u8>>(
+    random: F,
+    alphabet: &[char],
+    size: usize,
+) -> smartstring::alias::String {
+    format_impl(smartstring::alias::String::new(), random, alphabet, size)
+}
+
+fn format_impl<S: Extend<char> + AsRef<str>, F: FnMut(usize) -> Vec<u8>>(
+    mut id: S,
+    random: F,
+    alphabet: &[char],
+    size: usize,
+) -> S {
     assert!(
         alphabet.len() <= u8::MAX as usize,
         "The alphabet cannot be longer than a `u8` (to comply with the `random` function)"
     );
-
-    #[cfg(feature = "smartstring")]
-    let mut id = String::new();
-
-    #[cfg(not(feature = "smartstring"))]
-    let mut id = String::with_capacity(size);
 
     if alphabet.len().is_power_of_two() {
         fast_impl(&mut id, random, alphabet, size);
@@ -194,8 +205,8 @@ pub fn format<F: FnMut(usize) -> Vec<u8>>(random: F, alphabet: &[char], size: us
 }
 
 /// Generic implementation that works for any alphabet with up to 256 characters.
-fn generic_impl<F: FnMut(usize) -> Vec<u8>>(
-    id: &mut String,
+fn generic_impl<S: Extend<char> + AsRef<str>, F: FnMut(usize) -> Vec<u8>>(
+    id: &mut S,
     mut random: F,
     alphabet: &[char],
     size: usize,
@@ -213,9 +224,9 @@ fn generic_impl<F: FnMut(usize) -> Vec<u8>>(
             let byte = byte as usize & mask;
 
             if alphabet.len() > byte {
-                id.push(alphabet[byte]);
+                id.extend(std::iter::once(alphabet[byte]));
 
-                if id.len() == size {
+                if id.as_ref().len() == size {
                     return;
                 }
             }
@@ -226,8 +237,8 @@ fn generic_impl<F: FnMut(usize) -> Vec<u8>>(
 /// Faster implementation that assumes the size of the alphabet is a power of 2.
 ///
 /// This allows us to skip some checks and branches that are necessary in the general case.
-fn fast_impl<F: FnMut(usize) -> Vec<u8>>(
-    id: &mut String,
+fn fast_impl<S: Extend<char>, F: FnMut(usize) -> Vec<u8>>(
+    id: &mut S,
     mut random: F,
     alphabet: &[char],
     size: usize,
@@ -241,7 +252,7 @@ fn fast_impl<F: FnMut(usize) -> Vec<u8>>(
 
     for &byte in &bytes {
         let byte = byte as usize & mask;
-        id.push(alphabet[byte]);
+        id.extend(std::iter::once(alphabet[byte]));
     }
 }
 
@@ -305,6 +316,54 @@ macro_rules! nanoid {
     // complex
     ($size:expr, $alphabet:expr, $random:expr) => {
         $crate::format($random, $alphabet, $size)
+    };
+}
+
+#[cfg(feature = "compact_str")]
+#[macro_export]
+macro_rules! nanoid_compact {
+    // simple
+    () => {
+        $crate::format_compact($crate::rngs::default, &$crate::alphabet::SAFE, 21)
+    };
+
+    // generate
+    ($size:expr) => {
+        $crate::format_compact($crate::rngs::default, &$crate::alphabet::SAFE, $size)
+    };
+
+    // custom
+    ($size:expr, $alphabet:expr) => {
+        $crate::format_compact($crate::rngs::default, $alphabet, $size)
+    };
+
+    // complex
+    ($size:expr, $alphabet:expr, $random:expr) => {
+        $crate::format_compact($random, $alphabet, $size)
+    };
+}
+
+#[cfg(feature = "smartstring")]
+#[macro_export]
+macro_rules! nanoid_smart {
+    // simple
+    () => {
+        $crate::format_smart($crate::rngs::default, &$crate::alphabet::SAFE, 21)
+    };
+
+    // generate
+    ($size:expr) => {
+        $crate::format_smart($crate::rngs::default, &$crate::alphabet::SAFE, $size)
+    };
+
+    // custom
+    ($size:expr, $alphabet:expr) => {
+        $crate::format_smart($crate::rngs::default, $alphabet, $size)
+    };
+
+    // complex
+    ($size:expr, $alphabet:expr, $random:expr) => {
+        $crate::format_smart($random, $alphabet, $size)
     };
 }
 
