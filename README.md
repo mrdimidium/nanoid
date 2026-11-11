@@ -154,6 +154,20 @@ stateful random generators. This enables use cases like:
 - Integration with external random sources
 
 
+### Small String Optimization
+
+`nanoid!()` and `format` always return `std::string::String`, even when
+optional features are enabled. The features can be enabled together.
+
+- Enable `compact_str` and use `nanoid_compact!()` or `format_compact` to return
+  `compact_str::CompactString`.
+- Enable `smartstring` and use `nanoid_smart!()` or `format_smart` to return
+  `smartstring::alias::String`.
+
+Both macros accept the same arguments as `nanoid!()`. Code that previously
+relied on features changing the return type must switch to the corresponding
+macro or function.
+
 ### Other Programming Languages
 
 Reference implementation on [JavaScript](https://github.com/ai/nanoid).

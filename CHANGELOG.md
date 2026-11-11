@@ -1,6 +1,14 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.0
+
+* Fix non-additive `compact_str` and `smartstring` features (#37): `nanoid!` and
+  `format` always return standard `String`, regardless of enabled features.
+  Existing feature users must switch to `nanoid_compact!` / `format_compact`
+  for CompactString or `nanoid_smart!` / `format_smart` for SmartString output.
+  Both features can now be enabled together.
+
 ## 0.5.1
 
 * Add optional `compact_str` feature; `smartstring` remains supported for now and will be removed in a future release. The features are mutually exclusive (#43).

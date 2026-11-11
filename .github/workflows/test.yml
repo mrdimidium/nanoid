@@ -39,12 +39,14 @@ jobs:
 
     - name: Clippy
       run: |
+        cargo clippy --all-targets --all-features -- -D warnings
         cargo clippy --all-targets -- -D warnings
         cargo clippy --all-targets --no-default-features --features compact_str -- -D warnings
         cargo clippy --all-targets --no-default-features --features smartstring -- -D warnings
 
     - name: Build docs
       run: |
+        cargo doc --no-deps --all-features
         cargo doc --no-deps
         cargo doc --no-deps --no-default-features --features compact_str
         cargo doc --no-deps --no-default-features --features smartstring
@@ -68,18 +70,21 @@ jobs:
 
     - name: Each version feature
       run: |
-        cargo test --lib
-        cargo test --lib --no-default-features --features compact_str
-        cargo test --lib --no-default-features --features smartstring
+        cargo test --lib --tests --all-features
+        cargo test --lib --tests
+        cargo test --lib --tests --no-default-features --features compact_str
+        cargo test --lib --tests --no-default-features --features smartstring
 
     - name: Docs
       run: |
+        cargo test --doc --all-features
         cargo test --doc
         cargo test --doc --no-default-features --features compact_str
         cargo test --doc --no-default-features --features smartstring
 
     - name: Examples
       run: |
+        cargo test --examples --all-features
         cargo test --examples
         cargo test --examples --no-default-features --features compact_str
         cargo test --examples --no-default-features --features smartstring
